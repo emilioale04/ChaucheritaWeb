@@ -1,6 +1,6 @@
-package ec.edu.epn.monederovirtual.model.dao;
+package ec.edu.epn.chaucheritaweb.model.dao;
 
-import ec.edu.epn.monederovirtual.model.entities.Usuario;
+import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
 
 public class UsuarioDAO extends BaseDAO<Usuario> {
     public UsuarioDAO() {

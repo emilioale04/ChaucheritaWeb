@@ -1,4 +1,4 @@
-package ec.edu.epn.monederovirtual.model.dao;
+package ec.edu.epn.chaucheritaweb.model.dao;
 
 public abstract class BaseDAO<T> {
 

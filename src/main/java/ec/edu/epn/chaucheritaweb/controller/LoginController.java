@@ -1,4 +1,4 @@
-package ec.edu.epn.monederovirtual.controller;
+package ec.edu.epn.chaucheritaweb.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,7 +12,9 @@ import java.io.Serial;
 @WebServlet("/loginController")
 public class LoginController extends HttpServlet {
 
-    @Override
+	private static final long serialVersionUID = 1L;
+
+	@Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.ruteador(req, resp);
     }
