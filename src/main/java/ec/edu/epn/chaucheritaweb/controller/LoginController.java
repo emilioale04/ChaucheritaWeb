@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serial;
 
+import ec.edu.epn.chaucheritaweb.model.dao.UsuarioDAO;
+import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
+
 @WebServlet("/loginController")
 public class LoginController extends HttpServlet {
 
@@ -32,12 +35,28 @@ public class LoginController extends HttpServlet {
                 this.ingresar(req, resp);
                 break;
             case "login":
-//                this.login(req, resp);
+            	this.login(req, resp);
                 break;
         }
     }
 
     private void ingresar(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.sendRedirect("jsp/login.jsp");
+    }
+    
+    private void login(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String usuario = req.getParameter("usuario");
+        String clave = req.getParameter("clave");
+        
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        
+        Usuario u = usuarioDAO.autenticar(usuario, clave);
+        
+        if(u != null) {
+        	req.getSession().setAttribute("usuario", u);
+        	resp.sendRedirect("jsp/home.jsp");
+        } else {
+        	resp.sendRedirect("jsp/login.jsp");
+        }
     }
 }

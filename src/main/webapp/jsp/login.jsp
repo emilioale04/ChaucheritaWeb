@@ -17,7 +17,7 @@
 <div class="login-form">
     <h1 class="font-primary text-primary pd-y-16">Iniciar Sesión</h1>
     <div>
-        <form action="loginController" method="post">
+        <form action="../loginController" method="post">
             <input type="hidden" name="ruta" value="login">
             <div class="ds-flex align-center pd-y-16">
                 <i class="fa-solid fa-user text-primary text-xl pd-r-16"></i>

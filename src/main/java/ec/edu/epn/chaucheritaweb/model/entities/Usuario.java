@@ -17,14 +17,9 @@ public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "nombre", nullable = false, length = 100)
+    
     private String nombre;
-
-    @Column(name = "usuario", nullable = false, unique = true, length = 50)
     private String usuario;
-
-    @Column(name = "clave", nullable = false, length = 100)
     private String clave;
 
     public Usuario() {}
