@@ -7,6 +7,7 @@
     <title>Realizar Movimiento</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/movimiento.css">
+    <script src="js/realizarMovimiento.js"></script>
     <link rel="icon" type="image/png" href="images/dollar.png">
     <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
 </head>

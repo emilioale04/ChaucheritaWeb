@@ -118,10 +118,8 @@
                         </tr>
                     </c:forEach>
                     </tbody>
-
                 </table>
             </div>
-        
         </section>
     </div>
 </main>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionar Etiqueta</title>
+    <title>Gestionar Categoría</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/movimiento.css">
     <link rel="icon" type="image/png" href="images/dollar.png">
@@ -34,7 +34,7 @@
         </form>
     </div>
 </header>
-<main class="ds-flex jc-sb">
+<main class="ds-flex">
     <nav class="sidemenu bg-light">
         <img src="images/wallet-512px.png" alt="wallet">
         <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
@@ -73,30 +73,71 @@
             </li>
         </ul>
     </nav>
-    <div class="ds-flex pd-t-40 pd-x-40 flex-1">
-        <div class="flex-1 pd-r-40 mg-r-24">
-            <h2 class="font-primary text-dark">Crear Nueva Cuenta</h2>
-            
-            <form id="crear-cuenta-form" class="font-primary" action="" method="post">
-                <input type="hidden" name="ruta" value="">
-                <div class="ds-flex">
-                    <div class="flex-1 form-group pd-y-16 pd-r-24">
-                        <label for="nombre">Nombre de la Cuenta:</label>
-                        <input type="text" id="nombre" name="nombre" class="input text-base"
-                        placeholder="Ingrese el nombre de la cuenta" required>
+    <section class="ds-flex-column flex-1">
+        <div class="ds-flex pd-t-40 pd-x-40">
+            <div class="flex-1">
+                <h2 class="font-primary text-dark">Crear Nueva Categoría</h2>
+                
+                <form id="crear-categoria-form" class="font-primary" action="" method="post">
+                    <input type="hidden" name="ruta" value="">
+                    <div class="ds-flex">
+                        <div class="flex-1 form-group pd-y-16 pd-r-24">
+                            <label for="nombre">Nombre de la Categoría:</label>
+                            <input type="text" id="nombre" name="nombre" class="input text-base"
+                            placeholder="Ingrese el nombre de la categoría" required>
+                        </div>
                     </div>
-                    <div class="flex-1 form-group pd-y-16 pd-l-24">
-                        <label for="balance">Balance Inicial:</label>
-                        <input type="number" id="balance" name="balance" class="input text-base"
-                        placeholder="Ingrese el balance inicial" required>
-                    </div>
-                </div>
                     <div>
                         <button type="submit" class="button bg-primary text-white">Crear Cuenta</button>
-                </div>
-            </form>
+                    </div>
+                </form>
         </div>
     </div>
+    
+    <div class="ds-flex pd-t-40 pd-x-40">
+        <div class="flex-1">
+            <h2 class="font-primary text-dark">Mis Cuentas</h2>
+            <table id="tabla-cuentas" class="table border-light">
+                <thead>
+                <tr class="bg-light text-dark">
+                    <th class="pd-8">ID</th>
+                    <th class="pd-8">Nombre
+                        <button id="ordenar-cuentas" class="button bg-primary text-white pd-8 mg-t-8">
+                            .
+                        </button>
+                    </th>
+                    <th class="pd-8">Balance Actual</th>
+                    <th class="pd-8">Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="cuerpo-tabla-cuentas">
+                <c:forEach var="cuenta" items="${cuentas}">
+                    <tr>
+                        <td class="pd-8">${cuenta.id}</td>
+                        <td class="pd-8">${cuenta.nombre}</td>
+                        <td class="pd-8">${cuenta.balance}</td>
+                        <td class="pd-8 ds-flex jc-sa">
+                            <form action="" method="get">
+                                <input type="hidden" name="ruta" value="">
+                                <input type="hidden" name="cuentaId" value="${cuenta.id}">
+                                <button type="submit" class="button bg-primary text-white"> <i class="fa-solid fa-trash text-xl"></i>
+                                </button>
+                            </form>
+
+                            <form action="" method="get">
+                                <input type="hidden" name="ruta" value="">
+                                <input type="hidden" name="cuentaId" value="${cuenta.id}">
+                                <button type="submit" class="button bg-primary text-white"> <i class="fa-solid fa-pencil text-xl"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 </main>
 </body>
 </html>
