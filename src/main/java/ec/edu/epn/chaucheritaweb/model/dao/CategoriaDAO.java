@@ -6,6 +6,7 @@ import jakarta.persistence.Persistence;
 import java.util.List;
 
 import ec.edu.epn.chaucheritaweb.model.entities.Categoria;
+import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
 
 
 public class CategoriaDAO {
@@ -36,6 +37,19 @@ public class CategoriaDAO {
         EntityManager em = emf.createEntityManager();
         try {
             return em.createQuery("SELECT c FROM Categoria c", Categoria.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Categoria> listarPorUsuario(Usuario usuario) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery(
+                "SELECT c FROM Categoria c WHERE c.usuario = :usuario", 
+                Categoria.class)
+                .setParameter("usuario", usuario)
+                .getResultList();
         } finally {
             em.close();
         }
