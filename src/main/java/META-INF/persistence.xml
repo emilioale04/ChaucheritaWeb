@@ -8,10 +8,11 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>ec.edu.epn.chaucheritaweb.model.entities.Usuario</class>
 		<class>ec.edu.epn.chaucheritaweb.model.entities.Cuenta</class>
+		<class>ec.edu.epn.chaucheritaweb.model.entities.Categoria</class>
 		<properties>
 			<!-- Configuración de conexión a PostgreSQL -->
 			<property name="jakarta.persistence.jdbc.url"
-				value="jdbc:postgresql://database-postgres.c1uk8uy401bc.us-east-1.rds.amazonaws.com:5432/dbchaucherita" />
+				value="jdbc:postgresql://localhost:5432/dbchaucherita" />
 			<property name="jakarta.persistence.jdbc.user"
 				value="postgres" />
 			<property name="jakarta.persistence.jdbc.password"
@@ -21,9 +22,9 @@
 
 			<!-- Configuración adicional -->
 			<property name="eclipselink.logging.level" value="FINE" />
-<!-- 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" /> -->
-			<property name="eclipselink.ddl-generation" value="none"/>
-<!-- 			<property name="eclipselink.ddl-generation" value="create-tables"/> -->
+ 			<!--  <property name="eclipselink.ddl-generation" value="drop-and-create-tables" /> -->
+			 <!--  <property name="eclipselink.ddl-generation" value="none"/>-->
+			  <property name="eclipselink.ddl-generation" value="create-tables"/>
 		</properties>
 	</persistence-unit>
 </persistence>

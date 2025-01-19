@@ -57,13 +57,13 @@
                 </form>
             </li>
             <li>
-                <form action="" method="get">
-                    <input type="hidden" name="ruta" value="">
-                    <button class="menu-button pd-8" type="submit">
-                        <i class="fa-solid fa-tag text-xl"></i> Categorías
-                    </button>
-                </form>
-            </li>
+			    <form action="../GestionarCategoria" method="get">
+			        <button class="menu-button pd-8" type="submit">
+			            <i class="fa-solid fa-tag text-xl"></i> Categorías
+			        </button>
+			    </form>
+			</li>
+
             <li>
                 <form action="" method="get">
                     <input type="hidden" name="ruta" value="">
