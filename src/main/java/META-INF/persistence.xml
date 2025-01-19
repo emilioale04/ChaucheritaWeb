@@ -9,6 +9,10 @@
 		<class>ec.edu.epn.chaucheritaweb.model.entities.Usuario</class>
 		<class>ec.edu.epn.chaucheritaweb.model.entities.Cuenta</class>
 		<class>ec.edu.epn.chaucheritaweb.model.entities.Categoria</class>
+		<class>ec.edu.epn.chaucheritaweb.model.entities.Movimiento</class>
+		<class>ec.edu.epn.chaucheritaweb.model.entities.Ingreso</class>
+		<class>ec.edu.epn.chaucheritaweb.model.entities.Egreso</class>
+		<class>ec.edu.epn.chaucheritaweb.model.entities.Transferencia</class>
 		<properties>
 			<!-- Configuración de conexión a PostgreSQL -->
 			<property name="jakarta.persistence.jdbc.url"
