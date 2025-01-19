@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <html lang="en">
 
 <head>
@@ -77,17 +78,62 @@
         </nav>
         <div class="pd-x-40 pd-t-40 flex-2">
             <h2 class="font-primary text-dark">Mis Movimientos</h2>
+
+            <!-- Formulario de filtros -->
+            <form method="post" action="verMovimientos" class="form-group mg-y-16">
+                <div class="ds-flex gap-16">
+                    <select name="categoria" class="input">
+                        <option value="">Todas las categorías</option>
+                        <c:forEach var="categoria" items="${categorias}">
+                            <option value="${categoria.id}" ${param.categoria==categoria.id ? 'selected' : '' }>
+                                ${categoria.nombre}
+                            </option>
+                        </c:forEach>
+                    </select>
+
+                    <select name="tipo" class="input">
+                        <option value="">Todos los tipos</option>
+                        <option value="INGRESO" ${param.tipo=='INGRESO' ? 'selected' : '' }>Ingresos</option>
+                        <option value="EGRESO" ${param.tipo=='EGRESO' ? 'selected' : '' }>Egresos</option>
+                        <option value="TRANSFERENCIA" ${param.tipo=='TRANSFERENCIA' ? 'selected' : '' }>Transferencias
+                        </option>
+                    </select>
+
+                    <input type="date" name="fechaInicio" class="input" value="${param.fechaInicio}">
+                    <input type="date" name="fechaFin" class="input" value="${param.fechaFin}">
+
+                    <button type="submit" class="button">Filtrar</button>
+                    <a href="verMovimientos" class="button bg-light text-dark">Limpiar</a>
+                </div>
+            </form>
+
+            <!-- Tabla de movimientos -->
             <div class="font-primary">
                 <table id="movimientosTable" class="table border-light mg-y-16">
                     <tr>
-
+                        <th>Fecha</th>
+                        <th>Concepto</th>
+                        <th>Categoría</th>
+                        <th>Tipo</th>
+                        <th>Valor</th>
                     </tr>
                     <c:forEach var="movimiento" items="${movimientos}">
-
+                        <tr class="${movimiento['class'].simpleName == 'Ingreso' ? 'row-ingreso' : 'row-egreso'}">
+                            <td>
+                                <fmt:formatDate value="${movimiento.fecha}" pattern="dd/MM/yyyy" />
+                            </td>
+                            <td>${movimiento.concepto}</td>
+                            <td>${movimiento.categoria.nombre}</td>
+                            <td>${movimiento['class'].simpleName}</td>
+                            <td>
+                                <fmt:formatNumber value="${movimiento.valor}" type="currency" />
+                            </td>
+                        </tr>
                     </c:forEach>
                 </table>
             </div>
         </div>
     </main>
 </body>
+
 </html>
