@@ -82,6 +82,15 @@
             <!-- Formulario de filtros -->
             <form method="post" action="verMovimientos" class="form-group mg-y-16">
                 <div class="ds-flex gap-16">
+                    <select name="cuenta" class="input">
+                        <option value="">Todas las cuentas</option>
+                        <c:forEach var="cuenta" items="${cuentas}">
+                            <option value="${cuenta.id}" ${param.cuenta==cuenta.id ? 'selected' : '' }>
+                                ${cuenta.nombre}
+                            </option>
+                        </c:forEach>
+                    </select>
+
                     <select name="categoria" class="input">
                         <option value="">Todas las categorías</option>
                         <c:forEach var="categoria" items="${categorias}">
