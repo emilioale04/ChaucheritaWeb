@@ -9,9 +9,11 @@ import java.util.Map;
 
 import ec.edu.epn.chaucheritaweb.model.dao.CategoriaDAO;
 import ec.edu.epn.chaucheritaweb.model.dao.MovimientoDAO;
+import ec.edu.epn.chaucheritaweb.model.dao.CuentaDAO;
 import ec.edu.epn.chaucheritaweb.model.entities.Categoria;
 import ec.edu.epn.chaucheritaweb.model.entities.Movimiento;
 import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
+import ec.edu.epn.chaucheritaweb.model.entities.Cuenta;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,11 +27,13 @@ public class VerMovimientosController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private MovimientoDAO movimientoDAO;
     private CategoriaDAO categoriaDAO;
+    private CuentaDAO cuentaDAO;
 
     @Override
     public void init() throws ServletException {
         movimientoDAO = new MovimientoDAO();
         categoriaDAO = new CategoriaDAO();
+        cuentaDAO = new CuentaDAO();
     }
     
     @Override
@@ -44,9 +48,11 @@ public class VerMovimientosController extends HttpServlet {
         }
 
         List<Categoria> categorias = categoriaDAO.listarPorUsuario(usuario);
+        List<Cuenta> cuentas = cuentaDAO.findByUsuario(usuario);
         List<Movimiento> movimientos = movimientoDAO.findByUsuario(usuario);
         
         request.setAttribute("categorias", categorias);
+        request.setAttribute("cuentas", cuentas);
         request.setAttribute("movimientos", movimientos);
         request.getRequestDispatcher("/jsp/verMovimientos.jsp").forward(request, response);
     }
