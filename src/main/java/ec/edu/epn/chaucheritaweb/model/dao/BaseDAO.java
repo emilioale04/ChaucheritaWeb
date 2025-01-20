@@ -3,7 +3,6 @@ package ec.edu.epn.chaucheritaweb.model.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -34,10 +33,9 @@ public abstract class BaseDAO<T> {
      * Updates the given entity in the database.
      *
      * @param entity entity to be updated
-     * @return the updated entity
      */
-    public T actualizar(T entity) {
-        return entityManager.merge(entity);
+    public void actualizar(T entity) {
+        entityManager.merge(entity);
     }
 
     /**
