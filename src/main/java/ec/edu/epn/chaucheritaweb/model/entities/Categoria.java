@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 
 @Entity
 @Table(name = "categoria") // Nombre de la tabla en la base de datos
@@ -21,16 +24,17 @@ public class Categoria implements Serializable {
     @Column(name = "nombre_categoria")
     private String nombreCategoria;
 
-    @Column(name = "descripcion")
-    private String descripcion;
+    @ManyToOne 
+    @JoinColumn(name = "id_usuario", nullable = false) // Clave foránea en la tabla "categoria"
+    private Usuario usuario;
 
     public Categoria() {}
 
-    public Categoria(Integer id, String nombreCategoria, String descripcion) {
+    public Categoria(Integer id, String nombreCategoria, Usuario usuario) {
         super();
         this.id = id;
         this.nombreCategoria = nombreCategoria;
-        this.descripcion = descripcion;
+        this.usuario = usuario;
     }
 
     public Integer getId() {
@@ -49,5 +53,11 @@ public class Categoria implements Serializable {
         this.nombreCategoria = nombreCategoria;
     }
 
-}
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+}

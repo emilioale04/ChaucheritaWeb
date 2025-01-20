@@ -20,15 +20,15 @@
 			<property name="jakarta.persistence.jdbc.user"
 				value="postgres" />
 			<property name="jakarta.persistence.jdbc.password"
-				value="postgres" />
+				value="Mt334149." />
 			<property name="jakarta.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
 
 			<!-- Configuración adicional -->
 			<property name="eclipselink.logging.level" value="FINE" />
- 			<!--  <property name="eclipselink.ddl-generation" value="drop-and-create-tables" /> -->
+ 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" /> 
 			 <!--  <property name="eclipselink.ddl-generation" value="none"/>-->
-			  <property name="eclipselink.ddl-generation" value="create-tables"/>
+			  <!-- <property name="eclipselink.ddl-generation" value="create-tables"/>-->
 		</properties>
 	</persistence-unit>
 </persistence>

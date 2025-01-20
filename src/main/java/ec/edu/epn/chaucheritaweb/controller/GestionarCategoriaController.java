@@ -5,6 +5,7 @@ import java.util.List;
 
 import ec.edu.epn.chaucheritaweb.model.dao.CategoriaDAO;
 import ec.edu.epn.chaucheritaweb.model.entities.Categoria;
+import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -59,15 +60,16 @@ public class GestionarCategoriaController extends HttpServlet {
 
     private void listarCategorias(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Categoria> categorias = categoriaDAO.listar();
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
+        List<Categoria> categorias = categoriaDAO.listarPorUsuario(usuario);
         request.setAttribute("categorias", categorias);
         request.getRequestDispatcher("jsp/gestionarCategoria.jsp").forward(request, response);
     }
 
     private void cargarFormularioEdicion(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("id"));
-        Categoria categoria = categoriaDAO.buscarPorId(id);
+        int id = Integer.parseInt(request.getParameter("id")); // Reemplazado por int
+        Categoria categoria = categoriaDAO.findById(id);
         if (categoria == null) {
             request.setAttribute("error", "Categoría no encontrada.");
             listarCategorias(request, response);
@@ -92,7 +94,8 @@ public class GestionarCategoriaController extends HttpServlet {
         if (idStr == null || idStr.isEmpty()) {
             categoria = new Categoria();
         } else {
-            categoria = categoriaDAO.buscarPorId(Integer.parseInt(idStr));
+            int id = Integer.parseInt(idStr); // Reemplazado por int
+            categoria = categoriaDAO.findById(id);
             if (categoria == null) {
                 request.setAttribute("error", "Categoría no encontrada.");
                 listarCategorias(request, response);
@@ -112,7 +115,7 @@ public class GestionarCategoriaController extends HttpServlet {
 
     private void eliminarCategoria(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("id")); // Reemplazado por int
         categoriaDAO.eliminar(id);
         response.sendRedirect("GestionarCategoria");
     }

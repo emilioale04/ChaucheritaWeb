@@ -1,83 +1,22 @@
 package ec.edu.epn.chaucheritaweb.model.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import java.util.List;
-
 import ec.edu.epn.chaucheritaweb.model.entities.Categoria;
 import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
+import jakarta.persistence.TypedQuery;
+import java.util.List;
 
+public class CategoriaDAO extends BaseDAO<Categoria> {
 
-public class CategoriaDAO {
-
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChaucheritaWeb");
-
-    public void crear(Categoria categoria) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.persist(categoria);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
-
-    public Categoria buscarPorId(Integer id) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            return em.find(Categoria.class, id);
-        } finally {
-            em.close();
-        }
-    }
-
-    public List<Categoria> listar() {
-        EntityManager em = emf.createEntityManager();
-        try {
-            return em.createQuery("SELECT c FROM Categoria c", Categoria.class).getResultList();
-        } finally {
-            em.close();
-        }
+    public CategoriaDAO() {
+        super(Categoria.class);
     }
 
     public List<Categoria> listarPorUsuario(Usuario usuario) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            return em.createQuery(
-                "SELECT c FROM Categoria c WHERE c.usuario = :usuario", 
-                Categoria.class)
-                .setParameter("usuario", usuario)
-                .getResultList();
-        } finally {
-            em.close();
-        }
+        TypedQuery<Categoria> query = entityManager.createQuery(
+            "SELECT c FROM Categoria c WHERE c.usuario = :usuario",
+            Categoria.class
+        );
+        query.setParameter("usuario", usuario);
+        return query.getResultList();
     }
-
-    public void actualizar(Categoria categoria) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.merge(categoria);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
-
-    public void eliminar(Integer id) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            Categoria categoria = em.find(Categoria.class, id);
-            if (categoria != null) {
-                em.remove(categoria);
-            }
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
-
 }
