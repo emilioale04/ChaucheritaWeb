@@ -25,7 +25,10 @@ public class CuentaDAO extends BaseDAO<Cuenta> {
         } else if(movimiento instanceof Egreso) {
             cuenta.setBalance(cuenta.getBalance().subtract(movimiento.getValor()));
         }
-        this.actualizar(cuenta);
+        entityManager.getTransaction().begin();
+        entityManager.merge(cuenta);
+        entityManager.persist(movimiento);
+        entityManager.getTransaction().commit();
     }
 
     public void realizarMovimiento(Cuenta cuenta, Cuenta cuentaDestino, Movimiento movimiento) {
@@ -34,8 +37,9 @@ public class CuentaDAO extends BaseDAO<Cuenta> {
             cuentaDestino.setBalance(cuenta.getBalance().add(movimiento.getValor()));
         }
         entityManager.getTransaction().begin();
-        this.actualizar(cuenta);
-        this.actualizar(cuentaDestino);
+        entityManager.merge(cuenta);
+        entityManager.merge(cuentaDestino);
+        entityManager.persist(movimiento);
         entityManager.getTransaction().commit();
     }
 }
