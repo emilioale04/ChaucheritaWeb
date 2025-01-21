@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,7 +39,7 @@
     </header>
     <main class="ds-flex jc-sb">
         <nav class="sidemenu bg-light">
-            <img src=""<%= request.getContextPath() %>/jspimages/wallet-512px.png" alt="wallet">
+            <img src=" <%= request.getContextPath() %>/jsp/images/wallet-512px.png" alt="wallet">
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
@@ -66,8 +67,7 @@
                     </form>
                 </li>
                 <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
+                    <form action="<%= request.getContextPath() %>/verMovimientos" method="get">
                         <button class="menu-button pd-8" type="submit">
                             <i class="fa-solid fa-eye text-xl"></i> Movimientos
                         </button>
@@ -122,7 +122,7 @@
                         <!-- Formulario de Egreso -->
                         <div id="tab2" class="tab-pane hidden bg-white">
                             <form id="egreso-form" data-balance="${cuenta.balance}" class="font-primary"
-                                  action="<%= request.getContextPath() %>/realizarMovimientoController" method="post">
+                                action="<%= request.getContextPath() %>/realizarMovimientoController" method="post">
                                 <input type="hidden" name="ruta" value="realizarEgreso">
                                 <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                 <div class="form-group pd-y-8">
@@ -155,18 +155,17 @@
                         <!-- Formulario de Transferencia -->
                         <div id="tab3" class="tab-pane hidden bg-white">
                             <form id="transferencia-form" data-balance="${cuenta.balance}" class="font-primary"
-                                  action="<%= request.getContextPath() %>/realizarMovimientoController" method="post">
+                                action="<%= request.getContextPath() %>/realizarMovimientoController" method="post">
                                 <input type="hidden" name="ruta" value="realizarTransferencia">
                                 <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                 <div class="form-group pd-y-8">
                                     <label for="valor-transferencia">Valor:</label>
-                                    <input type="number" id="valor-transferencia" name="valor"
-                                        class="input text-base" placeholder="Ingrese el valor" required>
+                                    <input type="number" id="valor-transferencia" name="valor" class="input text-base"
+                                        placeholder="Ingrese el valor" required>
                                 </div>
                                 <div class="form-group pd-y-8">
                                     <label for="cuenta-destino">Cuenta Destino:</label>
-                                    <select id="cuenta-destino" name="cuentaDestinoId" class="input text-base"
-                                        required>
+                                    <select id="cuenta-destino" name="cuentaDestinoId" class="input text-base" required>
                                         <option value="">Seleccione una cuenta</option>
                                         <c:forEach var="cuenta" items="${cuentas}">
                                             <option value="${cuenta.id}" data-balance="${cuenta.balance}">
@@ -216,4 +215,5 @@
         });
     </script>
 </body>
+
 </html>

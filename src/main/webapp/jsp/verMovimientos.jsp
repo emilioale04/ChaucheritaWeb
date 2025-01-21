@@ -7,9 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Movimientos</title>
-    <link rel="stylesheet" href="styles/styles.css">
-    <link rel="stylesheet" href="styles/verMovimiento.css">
-    <link rel="icon" type="image/png" href="images/dollar.png">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/verMovimiento.css">
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/jsp/images/dollar.png">
     <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
 </head>
 
@@ -39,7 +39,7 @@
     </header>
     <main class="ds-flex jc-sb">
         <nav class="sidemenu bg-light">
-            <img src="images/wallet-512px.png" alt="wallet">
+            <img src=" <%= request.getContextPath() %>/jsp/images/wallet-512px.png" alt="wallet">
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
@@ -67,8 +67,7 @@
                     </form>
                 </li>
                 <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
+                    <form action="<%= request.getContextPath() %>/verMovimientos" method="get">
                         <button class="menu-button pd-8" type="submit">
                             <i class="fa-solid fa-eye text-xl"></i> Movimientos
                         </button>
