@@ -3,7 +3,6 @@ package ec.edu.epn.chaucheritaweb.model.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -27,17 +26,30 @@ public abstract class BaseDAO<T> {
      * @param entity entity to be persisted
      */
     public void crear(T entity) {
-        entityManager.persist(entity);
+        try {
+            entityManager.getTransaction().begin(); // Start transaction
+            entityManager.persist(entity);
+            entityManager.getTransaction().commit(); // Commit transaction
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback(); // Rollback transaction on error
+            throw e;
+        }
     }
 
     /**
      * Updates the given entity in the database.
      *
      * @param entity entity to be updated
-     * @return the updated entity
      */
-    public T actualizar(T entity) {
-        return entityManager.merge(entity);
+    public void actualizar(T entity) {
+        try {
+            entityManager.getTransaction().begin(); // Start transaction
+            entityManager.merge(entity);
+            entityManager.getTransaction().commit(); // Commit transaction
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback(); // Rollback transaction on error
+            throw e;
+        }
     }
 
     /**
@@ -46,9 +58,16 @@ public abstract class BaseDAO<T> {
      * @param id primary key of the entity to remove
      */
     public void eliminar(int id) {
-        T entity = entityManager.find(entityClass, id);
-        if (entity != null) {
-            entityManager.remove(entity);
+        try {
+            entityManager.getTransaction().begin(); // Start transaction
+            T entity = entityManager.find(entityClass, id);
+            if (entity != null) {
+                entityManager.remove(entity);
+            }
+            entityManager.getTransaction().commit(); // Commit transaction
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback(); // Rollback transaction on error
+            throw e;
         }
     }
 
@@ -73,5 +92,14 @@ public abstract class BaseDAO<T> {
         Root<T> rootEntry = cq.from(entityClass);
         CriteriaQuery<T> all = cq.select(rootEntry);
         return entityManager.createQuery(all).getResultList();
+    }
+
+    /**
+     * Closes the EntityManager when the DAO is no longer needed.
+     */
+    public void cerrar() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
     }
 }

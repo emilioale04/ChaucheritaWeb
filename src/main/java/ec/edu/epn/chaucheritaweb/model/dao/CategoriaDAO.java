@@ -19,4 +19,6 @@ public class CategoriaDAO extends BaseDAO<Categoria> {
         query.setParameter("usuario", usuario);
         return query.getResultList();
     }
+
+
 }

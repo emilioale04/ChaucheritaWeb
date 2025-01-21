@@ -1,12 +1,9 @@
 package ec.edu.epn.chaucheritaweb.model.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cuenta")
@@ -17,8 +14,10 @@ public class Cuenta implements Serializable {
     private int id;
 
     private String nombre;
-    private double balance;
+    private BigDecimal balance;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     public Cuenta() {
@@ -33,7 +32,7 @@ public class Cuenta implements Serializable {
         return nombre;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
@@ -49,7 +48,7 @@ public class Cuenta implements Serializable {
         this.nombre = nombre;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

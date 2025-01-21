@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Realizar Movimiento</title>
-    <link rel="stylesheet" href="styles/styles.css">
-    <link rel="stylesheet" href="styles/movimiento.css">
-    <script src="js/realizarMovimiento.js"></script>
-    <link rel="icon" type="image/png" href="images/dollar.png">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/movimiento.css">
+    <script src="<%= request.getContextPath() %>/jsp/js/realizarMovimiento.js"></script>
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/jsp/images/dollar.png">
     <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
 </head>
 
@@ -38,7 +38,7 @@
     </header>
     <main class="ds-flex jc-sb">
         <nav class="sidemenu bg-light">
-            <img src="images/wallet-512px.png" alt="wallet">
+            <img src=""<%= request.getContextPath() %>/jspimages/wallet-512px.png" alt="wallet">
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
@@ -90,8 +90,8 @@
                         <!-- Formulario de Ingreso -->
                         <div id="tab1" class="tab-pane bg-white">
                             <form id="ingreso-form" data-balance="${cuenta.balance}" class="font-primary"
-                                action="movimientoServlet" method="post">
-                                <input type="hidden" name="route" value="ingresar">
+                                action="<%= request.getContextPath() %>/realizarMovimientoController" method="post">
+                                <input type="hidden" name="ruta" value="realizarIngreso">
                                 <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                 <div class="form-group pd-y-8">
                                     <label for="valor-ingreso">Valor:</label>
@@ -104,11 +104,11 @@
                                         placeholder="Concepto del ingreso">
                                 </div>
                                 <div class="form-group pd-y-8">
-                                    <label for="etiqueta-ingreso">Etiqueta:</label>
-                                    <select id="etiqueta-ingreso" name="etiquetaId" class="input text-base">
-                                        <option value="">Seleccione una etiqueta</option>
-                                        <c:forEach var="etiqueta" items="${etiquetas}">
-                                            <option value="${etiqueta.id}">${etiqueta.nombre}</option>
+                                    <label for="categoria-ingreso">Categoria:</label>
+                                    <select id="categoria-ingreso" name="categoriaId" class="input text-base">
+                                        <option value="">Seleccione una categoria</option>
+                                        <c:forEach var="categoria" items="${categorias}">
+                                            <option value="${categoria.id}">${categoria.nombreCategoria}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -122,8 +122,8 @@
                         <!-- Formulario de Egreso -->
                         <div id="tab2" class="tab-pane hidden bg-white">
                             <form id="egreso-form" data-balance="${cuenta.balance}" class="font-primary"
-                                action="movimientoServlet" method="post">
-                                <input type="hidden" name="route" value="egresar">
+                                  action="<%= request.getContextPath() %>/realizarMovimientoController" method="post">
+                                <input type="hidden" name="ruta" value="realizarEgreso">
                                 <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                 <div class="form-group pd-y-8">
                                     <label for="valor-egreso">Valor:</label>
@@ -136,11 +136,11 @@
                                         placeholder="Concepto del egreso">
                                 </div>
                                 <div class="form-group pd-y-8">
-                                    <label for="etiqueta-egreso">Etiqueta:</label>
-                                    <select id="etiqueta-egreso" name="etiquetaId" class="input text-base">
-                                        <option value="">Seleccione una etiqueta</option>
-                                        <c:forEach var="etiqueta" items="${etiquetas}">
-                                            <option value="${etiqueta.id}">${etiqueta.nombre}</option>
+                                    <label for="categoria-egreso">Categoria:</label>
+                                    <select id="categoria-egreso" name="categoriaId" class="input text-base">
+                                        <option value="">Seleccione una categoria</option>
+                                        <c:forEach var="categoria" items="${categorias}">
+                                            <option value="${categoria.id}">${categoria.nombreCategoria}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -155,8 +155,8 @@
                         <!-- Formulario de Transferencia -->
                         <div id="tab3" class="tab-pane hidden bg-white">
                             <form id="transferencia-form" data-balance="${cuenta.balance}" class="font-primary"
-                                action="movimientoServlet" method="post">
-                                <input type="hidden" name="route" value="transferir">
+                                  action="<%= request.getContextPath() %>/realizarMovimientoController" method="post">
+                                <input type="hidden" name="ruta" value="realizarTransferencia">
                                 <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                 <div class="form-group pd-y-8">
                                     <label for="valor-transferencia">Valor:</label>
@@ -182,12 +182,11 @@
                                         placeholder="Concepto de la transferencia">
                                 </div>
                                 <div class="form-group pd-y-8">
-                                    <label for="etiqueta-transferencia">Etiqueta:</label>
-                                    <select id="etiqueta-transferencia" name="etiquetaId"
-                                        class="input text-base">
-                                        <option value="">Seleccione una etiqueta</option>
-                                        <c:forEach var="etiqueta" items="${etiquetas}">
-                                            <option value="${etiqueta.id}">${etiqueta.nombre}</option>
+                                    <label for="categoria-transferencia">Categoria:</label>
+                                    <select id="categoria-transferencia" name="categoriaId" class="input text-base">
+                                        <option value="">Seleccione una categoria</option>
+                                        <c:forEach var="categoria" items="${categorias}">
+                                            <option value="${categoria.id}">${categoria.nombreCategoria}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
