@@ -1,5 +1,7 @@
 package ec.edu.epn.chaucheritaweb.controller;
 
+import ec.edu.epn.chaucheritaweb.model.dao.CuentaDAO;
+import ec.edu.epn.chaucheritaweb.model.entities.Cuenta;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.Serial;
+import java.util.List;
 
 import ec.edu.epn.chaucheritaweb.model.dao.UsuarioDAO;
 import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
@@ -27,7 +30,7 @@ public class LoginController extends HttpServlet {
         this.ruteador(req, resp);
     }
 
-    private void ruteador(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void ruteador(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String ruta = (req.getParameter("ruta") == null) ? "ingresar" : req.getParameter("ruta");
 
         switch (ruta) {
@@ -44,17 +47,23 @@ public class LoginController extends HttpServlet {
         resp.sendRedirect("jsp/login.jsp");
     }
     
-    private void login(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void login(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String usuario = req.getParameter("usuario");
         String clave = req.getParameter("clave");
         
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         
         Usuario u = usuarioDAO.autenticar(usuario, clave);
+
+        CuentaDAO cuentaDAO = new CuentaDAO();
+
+        List<Cuenta> cuentas = cuentaDAO.findByUsuario(u);
+
+        req.setAttribute("cuentas", cuentas);
         
         if(u != null) {
         	req.getSession().setAttribute("usuario", u);
-        	resp.sendRedirect("jsp/home.jsp");
+        	req.getRequestDispatcher("jsp/home.jsp").forward(req, resp);
         } else {
         	resp.sendRedirect("jsp/login.jsp");
         }

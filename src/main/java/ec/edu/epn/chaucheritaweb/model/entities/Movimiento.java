@@ -2,6 +2,7 @@ package ec.edu.epn.chaucheritaweb.model.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.*;
@@ -25,7 +26,11 @@ public abstract class Movimiento implements Serializable {
     private String concepto;
 
     @Column(name = "fecha")
-    private Date fecha;
+    private LocalDateTime fecha;
+
+	@ManyToOne
+	@JoinColumn(name = "categoria_id", nullable = false)
+	private Categoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "cuenta_id", nullable = false)
@@ -33,7 +38,7 @@ public abstract class Movimiento implements Serializable {
 
     public Movimiento() {}
 
-    public Movimiento(int id, BigDecimal valor, String concepto, Date fecha, Cuenta cuenta) {
+    public Movimiento(int id, BigDecimal valor, String concepto, LocalDateTime fecha, Cuenta cuenta) {
         this.id = id;
         this.valor = valor;
         this.concepto = concepto;
@@ -65,11 +70,11 @@ public abstract class Movimiento implements Serializable {
 		this.concepto = concepto;
 	}
 
-	public Date getFecha() {
+	public LocalDateTime getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
 	}
 
@@ -84,5 +89,12 @@ public abstract class Movimiento implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-    
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
 }
