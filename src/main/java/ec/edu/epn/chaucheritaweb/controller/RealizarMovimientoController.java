@@ -85,7 +85,6 @@ public class RealizarMovimientoController extends HttpServlet {
 
             CuentaDAO cuentaDAO = new CuentaDAO();
             CategoriaDAO categoriaDAO = new CategoriaDAO();
-            MovimientoDAO movimientoDAO = new MovimientoDAO();
 
             Cuenta cuenta = cuentaDAO.findById(cuentaId);
             if (cuenta == null) {
@@ -113,7 +112,6 @@ public class RealizarMovimientoController extends HttpServlet {
             movimiento.setFecha(LocalDateTime.now());
 
             cuentaDAO.realizarMovimiento(cuenta, movimiento);
-            movimientoDAO.crear(movimiento);
 
             req.setAttribute("cuentaId", cuenta.getId());
             req.getRequestDispatcher("realizarMovimientoController?ruta=realizarMovimiento").forward(req, resp);
@@ -134,13 +132,14 @@ public class RealizarMovimientoController extends HttpServlet {
 
     private void realizarTransferencia(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         try {
-            int cuentaOrigenId = Integer.parseInt(req.getParameter("cuentaOrigenId"));
+            int cuentaOrigenId = Integer.parseInt(req.getParameter("cuentaId"));
             int cuentaDestinoId = Integer.parseInt(req.getParameter("cuentaDestinoId"));
             BigDecimal valor = new BigDecimal(req.getParameter("valor"));
             String concepto = req.getParameter("concepto");
+            int categoriaId = Integer.parseInt(req.getParameter("categoriaId"));
 
             CuentaDAO cuentaDAO = new CuentaDAO();
-            MovimientoDAO movimientoDAO = new MovimientoDAO();
+            CategoriaDAO categoriaDAO = new CategoriaDAO();
 
             Cuenta cuentaOrigen = cuentaDAO.findById(cuentaOrigenId);
             Cuenta cuentaDestino = cuentaDAO.findById(cuentaDestinoId);
@@ -150,15 +149,21 @@ public class RealizarMovimientoController extends HttpServlet {
                 return;
             }
 
+            Categoria categoria = categoriaDAO.findById(categoriaId);
+            if (categoria == null) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "La categoría especificada no existe.");
+                return;
+            }
+
             Transferencia transferencia = new Transferencia();
             transferencia.setValor(valor);
             transferencia.setConcepto(concepto);
             transferencia.setCuenta(cuentaOrigen);
             transferencia.setCuentaDestino(cuentaDestino);
+            transferencia.setCategoria(categoria);
             transferencia.setFecha(LocalDateTime.now());
 
             cuentaDAO.realizarMovimiento(cuentaOrigen, cuentaDestino, transferencia);
-            movimientoDAO.crear(transferencia);
 
             req.setAttribute("cuentaId", cuentaOrigen.getId());
             req.getRequestDispatcher("realizarMovimientoController?ruta=realizarMovimiento").forward(req, resp);
