@@ -6,9 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionar Categoría</title>
-    <link rel="stylesheet" href="styles/styles.css">
-    <link rel="stylesheet" href="styles/home.css">
-    <link rel="icon" type="image/png" href="images/dollar.png">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/home.css">
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/jsp/images/dollar.png">
     <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
 </head>
 
@@ -26,11 +26,11 @@
     </header>
     <main class="ds-flex">
         <nav class="sidemenu bg-light">
-            <img src="images/wallet-512px.png" alt="wallet">
+            <img src="<%= request.getContextPath() %>/jsp/images/wallet-512px.png" alt="wallet">
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
-                    <button class="menu-button pd-8" onclick="window.location.href='Inicio'">
+                    <button class="menu-button pd-8" onclick="window.location.href='jsp/home.jsp'">
                         <i class="fa-solid fa-house text-xl"></i> Inicio
                     </button>
                 </li>
@@ -53,7 +53,7 @@
                 </li>
             </ul>
         </nav>
-        <section class="ds-flex-column flex-1">
+        <section class="ds-flex-column flex-1 pd-l-32 pd-r-32 pd-t-32">
             <div class="main-content pd-lg">
                 <h2 class="font-primary text-dark">Gestionar Categorías</h2>
 

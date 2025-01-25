@@ -81,6 +81,7 @@ public class GestionarCategoriaController extends HttpServlet {
 
     private void guardarCategoria(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
         String idStr = request.getParameter("id");
         String nombreCategoria = request.getParameter("nombre");
 
@@ -104,6 +105,7 @@ public class GestionarCategoriaController extends HttpServlet {
         }
         categoria.setNombreCategoria(nombreCategoria);
 
+        categoria.setUsuario(usuario);
         if (categoria.getId() == null) {
             categoriaDAO.crear(categoria);
         } else {
