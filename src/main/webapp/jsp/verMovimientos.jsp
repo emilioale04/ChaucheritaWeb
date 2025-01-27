@@ -43,28 +43,19 @@
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
-                        <button class="menu-button pd-8" type="submit">
-                            <i class="fa-solid fa-house text-xl"></i> Inicio
-                        </button>
-                    </form>
+                    <button class="menu-button pd-8" onclick="window.location.href='jsp/home.jsp'">
+                        <i class="fa-solid fa-house text-xl"></i> Inicio
+                    </button>
                 </li>
                 <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
-                        <button class="menu-button pd-8" type="submit">
-                            <i class="fa-solid fa-gear text-xl"></i> Cuentas
-                        </button>
-                    </form>
+                    <button class="menu-button pd-8" onclick="window.location.href='Cuentas'">
+                        <i class="fa-solid fa-gear text-xl"></i> Cuentas
+                    </button>
                 </li>
                 <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
-                        <button class="menu-button pd-8" type="submit">
-                            <i class="fa-solid fa-tag text-xl"></i> Categorías
-                        </button>
-                    </form>
+                    <button class="menu-button pd-8" onclick="window.location.href='GestionaCategoria'">
+                        <i class="fa-solid fa-tag text-xl"></i> Categorías
+                    </button>
                 </li>
                 <li>
                     <form action="<%= request.getContextPath() %>/verMovimientos" method="get">
@@ -94,7 +85,7 @@
                         <option value="">Todas las categorías</option>
                         <c:forEach var="categoria" items="${categorias}">
                             <option value="${categoria.id}" ${param.categoria==categoria.id ? 'selected' : '' }>
-                                ${categoria.nombre}
+                                ${categoria.nombreCategoria}
                             </option>
                         </c:forEach>
                     </select>
@@ -128,10 +119,10 @@
                     <c:forEach var="movimiento" items="${movimientos}">
                         <tr class="${movimiento['class'].simpleName == 'Ingreso' ? 'row-ingreso' : 'row-egreso'}">
                             <td>
-                                <fmt:formatDate value="${movimiento.fecha}" pattern="dd/MM/yyyy" />
+                                ${movimiento.fecha.toLocalDate()}
                             </td>
                             <td>${movimiento.concepto}</td>
-                            <td>${movimiento.categoria.nombre}</td>
+                            <td>${movimiento.categoria.nombreCategoria}</td>
                             <td>${movimiento['class'].simpleName}</td>
                             <td>
                                 <fmt:formatNumber value="${movimiento.valor}" type="currency" />

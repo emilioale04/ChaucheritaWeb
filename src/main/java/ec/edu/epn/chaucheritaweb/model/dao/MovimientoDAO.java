@@ -33,23 +33,27 @@ public class MovimientoDAO extends BaseDAO<Movimiento> {
         StringBuilder jpql = new StringBuilder();
         jpql.append("SELECT m FROM Movimiento m WHERE m.cuenta.usuario = :usuario ");
         
-        Map<String, Object> params = new HashMap<>();
-        params.put("usuario", usuario);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("usuario", usuario);
 
         if (cuentaId != null) {
             jpql.append("AND m.cuenta.id = :cuentaId ");
-            params.put("cuentaId", cuentaId);
+            parameters.put("cuentaId", cuentaId);
         }
 
         if (categoriaId != null) {
             jpql.append("AND m.categoria.id = :categoriaId ");
-            params.put("categoriaId", categoriaId);
+            parameters.put("categoriaId", categoriaId);
         }
 
-        if (fechaInicio != null && fechaFin != null) {
-            jpql.append("AND m.fecha BETWEEN :fechaInicio AND :fechaFin ");
-            params.put("fechaInicio", fechaInicio);
-            params.put("fechaFin", fechaFin);
+        if (fechaInicio != null) {
+            jpql.append("AND DATE(m.fecha) >= :fechaInicio ");
+            parameters.put("fechaInicio", fechaInicio);
+        }
+
+        if (fechaFin != null) {
+            jpql.append("AND DATE(m.fecha) <= :fechaFin ");
+            parameters.put("fechaFin", fechaFin);
         }
 
         if (tipo != null && !tipo.isEmpty()) {
@@ -60,13 +64,13 @@ public class MovimientoDAO extends BaseDAO<Movimiento> {
                 case "TRANSFERENCIA" -> Transferencia.class;
                 default -> throw new IllegalArgumentException("Tipo de movimiento no válido");
             };
-            params.put("tipo", tipoClase);
+            parameters.put("tipo", tipoClase);
         }
 
         jpql.append("ORDER BY m.fecha DESC");
 
         TypedQuery<Movimiento> query = entityManager.createQuery(jpql.toString(), Movimiento.class);
-        params.forEach(query::setParameter);
+        parameters.forEach(query::setParameter);
 
         return query.getResultList();
     }

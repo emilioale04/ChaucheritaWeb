@@ -36,98 +36,123 @@ public class VerMovimientosController extends HttpServlet {
         categoriaDAO = new CategoriaDAO();
         cuentaDAO = new CuentaDAO();
     }
-    
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ruteador(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ruteador(request, response);
+    }
+
+    private void ruteador(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        
+
         if (usuario == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "jsp/login.jsp");
             return;
         }
 
+        // Si es una petición POST, siempre va a filtrar
+        if (request.getMethod().equals("POST")) {
+            filtrarMovimientos(request, response);
+            return;
+        }
+
+        // Si es GET, muestra los movimientos normalmente
+        mostrarMovimientos(request, response);
+    }
+
+    private void mostrarMovimientos(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
         try {
-            // Cargar datos necesarios
             List<Categoria> categorias = categoriaDAO.listarPorUsuario(usuario);
             List<Cuenta> cuentas = cuentaDAO.findByUsuario(usuario);
-            List<Movimiento> movimientos = movimientoDAO.findByUsuario(usuario);
             
-            // Calcular totales
-            Map<String, Double> totales = calcularTotales(movimientos);
-            
-            // Establecer atributos en el request
-            request.setAttribute("categorias", categorias);
-            request.setAttribute("cuentas", cuentas);
-            request.setAttribute("movimientos", movimientos);
-            request.setAttribute("totales", totales);
-            
-            // Redirigir a la vista
-            request.getRequestDispatcher("/jsp/verMovimientos.jsp").forward(request, response);
-        } catch (Exception e) {
-            request.setAttribute("error", "Error al cargar los movimientos: " + e.getMessage());
-            request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
-        }
-    }
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        
-        if (usuario == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-
-        try {
-            // Obtener parámetros de filtro
+            // Obtener parámetros de filtro de la URL (para GET)
             Integer cuentaId = getIntParameter(request, "cuenta");
             Integer categoriaId = getIntParameter(request, "categoria");
             Date fechaInicio = getFechaParameter(request, "fechaInicio");
             Date fechaFin = getFechaParameter(request, "fechaFin");
             String tipo = request.getParameter("tipo");
+
+            List<Movimiento> movimientos;
             
-            // Aplicar filtros
-            List<Movimiento> movimientos = movimientoDAO.findWithFilters(
-                usuario, cuentaId, categoriaId, fechaInicio, fechaFin, tipo
-            );
-            
-            // Cargar datos complementarios
-            List<Categoria> categorias = categoriaDAO.listarPorUsuario(usuario);
-            List<Cuenta> cuentas = cuentaDAO.findByUsuario(usuario);
+            // Si hay algún filtro aplicado
+            if (cuentaId != null || categoriaId != null || fechaInicio != null || 
+                fechaFin != null || (tipo != null && !tipo.isEmpty())) {
+                movimientos = movimientoDAO.findWithFilters(
+                    usuario, cuentaId, categoriaId, fechaInicio, fechaFin, tipo);
+            } else {
+                movimientos = movimientoDAO.findByUsuario(usuario);
+            }
+
             Map<String, Double> totales = calcularTotales(movimientos);
-            
-            // Establecer atributos
+
             request.setAttribute("categorias", categorias);
             request.setAttribute("cuentas", cuentas);
             request.setAttribute("movimientos", movimientos);
             request.setAttribute("totales", totales);
-            request.setAttribute("filtroAplicado", true);
-            
-            // Mantener los filtros seleccionados
-            Map<String, Object> filtros = new HashMap<>();
-            filtros.put("cuenta", cuentaId);
-            filtros.put("categoria", categoriaId);
-            filtros.put("fechaInicio", fechaInicio);
-            filtros.put("fechaFin", fechaFin);
-            filtros.put("tipo", tipo);
-            request.setAttribute("filtros", filtros);
-            
+
         } catch (Exception e) {
-            request.setAttribute("error", "Error al aplicar los filtros: " + e.getMessage());
+            request.setAttribute("mensaje", "Error al cargar los movimientos: " + e.getMessage());
         }
         
         request.getRequestDispatcher("/jsp/verMovimientos.jsp").forward(request, response);
     }
-    
+
+    private void filtrarMovimientos(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        try {
+            Integer cuentaId = getIntParameter(request, "cuenta");
+            Integer categoriaId = getIntParameter(request, "categoria");
+            Date fechaInicio = getFechaParameter(request, "fechaInicio");
+            Date fechaFin = getFechaParameter(request, "fechaFin");
+            String tipo = request.getParameter("tipo");
+
+            List<Movimiento> movimientos = movimientoDAO.findWithFilters(
+                    usuario, cuentaId, categoriaId, fechaInicio, fechaFin, tipo);
+            List<Categoria> categorias = categoriaDAO.listarPorUsuario(usuario);
+            List<Cuenta> cuentas = cuentaDAO.findByUsuario(usuario);
+            Map<String, Double> totales = calcularTotales(movimientos);
+
+            request.setAttribute("categorias", categorias);
+            request.setAttribute("cuentas", cuentas);
+            request.setAttribute("movimientos", movimientos);
+            request.setAttribute("totales", totales);
+            
+            // Mantener los filtros en la vista
+            request.setAttribute("filtroAplicado", true);
+            request.setAttribute("cuentaSeleccionada", cuentaId);
+            request.setAttribute("categoriaSeleccionada", categoriaId);
+            request.setAttribute("fechaInicio", request.getParameter("fechaInicio"));
+            request.setAttribute("fechaFin", request.getParameter("fechaFin"));
+            request.setAttribute("tipoSeleccionado", tipo);
+
+        } catch (Exception e) {
+            request.setAttribute("mensaje", "Error al aplicar los filtros: " + e.getMessage());
+        }
+
+        request.getRequestDispatcher("/jsp/verMovimientos.jsp").forward(request, response);
+    }
+
     private Integer getIntParameter(HttpServletRequest request, String paramName) {
         String value = request.getParameter(paramName);
         return (value != null && !value.isEmpty()) ? Integer.parseInt(value) : null;
     }
-    
+
     private Date getFechaParameter(HttpServletRequest request, String paramName) {
         String value = request.getParameter(paramName);
         if (value == null || value.isEmpty()) {
