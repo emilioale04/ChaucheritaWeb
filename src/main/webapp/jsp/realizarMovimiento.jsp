@@ -96,7 +96,7 @@
                                 <div class="form-group pd-y-8">
                                     <label for="valor-ingreso">Valor:</label>
                                     <input type="number" id="valor-ingreso" name="valor" class="input text-base"
-                                        placeholder="Ingrese el valor" required>
+                                        placeholder="Ingrese el valor" required step="0.01" min="0" max="9999999999">
                                 </div>
                                 <div class="form-group pd-y-8">
                                     <label for="concepto-ingreso">Concepto:</label>
@@ -128,7 +128,7 @@
                                 <div class="form-group pd-y-8">
                                     <label for="valor-egreso">Valor:</label>
                                     <input type="number" id="valor-egreso" name="valor" class="input text-base"
-                                        placeholder="Ingrese el valor" required>
+                                        placeholder="Ingrese el valor" required step="0.01" min="0" max="9999999999">
                                 </div>
                                 <div class="form-group pd-y-8">
                                     <label for="concepto-egreso">Concepto:</label>
@@ -161,7 +161,7 @@
                                 <div class="form-group pd-y-8">
                                     <label for="valor-transferencia">Valor:</label>
                                     <input type="number" id="valor-transferencia" name="valor" class="input text-base"
-                                        placeholder="Ingrese el valor" required>
+                                        placeholder="Ingrese el valor" required step="0.01" min="0" max="9999999999">
                                 </div>
                                 <div class="form-group pd-y-8">
                                     <label for="cuenta-destino">Cuenta Destino:</label>

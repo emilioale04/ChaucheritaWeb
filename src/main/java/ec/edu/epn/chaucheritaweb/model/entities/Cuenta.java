@@ -14,6 +14,8 @@ public class Cuenta implements Serializable {
     private int id;
 
     private String nombre;
+
+    @Column(name = "balance", precision = 18, scale = 2)
     private BigDecimal balance;
 
     @ManyToOne

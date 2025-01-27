@@ -19,7 +19,7 @@ public abstract class Movimiento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "valor")
+    @Column(name = "valor", precision = 18, scale = 2)
     private BigDecimal valor;
 
     @Column(name = "concepto")

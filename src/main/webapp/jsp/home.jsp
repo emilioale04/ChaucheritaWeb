@@ -14,17 +14,6 @@
 </head>
 
 <body>
-    <!--
-        <div id="toast-container"></div>
-        <c:if test="${not empty mensaje}">
-            <div id="alerta-overlay">
-                <div id="alerta-box">
-                    <p>${mensaje}</p>
-                    <button>OK</button>
-                </div>
-            </div>
-        </c:if>
--->
     <header class="header bg-primary ds-flex jc-sb pd-y-16 pd-x-24 font-secondary text-white align-center">
         <div></div>
         <div>
