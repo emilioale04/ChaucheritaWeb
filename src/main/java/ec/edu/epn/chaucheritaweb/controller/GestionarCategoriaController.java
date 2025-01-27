@@ -21,40 +21,34 @@ public class GestionarCategoriaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        try {
-            if (action == null || action.isEmpty()) {
-                listarCategorias(request, response);
-            } else if ("editar".equals(action)) {
-                cargarFormularioEdicion(request, response);
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al procesar la solicitud.");
-        }
+        ruteador(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
+        ruteador(request, response);
+    }
 
-        try {
-            if ("crear".equals(action)) {
-                guardarCategoria(request, response);
-            } else if ("editar".equals(action)) {
-                guardarCategoria(request, response);
-            } else if ("eliminar".equals(action)) {
-                eliminarCategoria(request, response);
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Error al procesar la solicitud: " + e.getMessage());
-            listarCategorias(request, response);
+    private void ruteador(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String ruta = (req.getParameter("ruta") == null) ? "listarCategorias" : req.getParameter("ruta");
+
+        switch (ruta) {
+            case "listarCategorias":
+                listarCategorias(req, resp);
+                break;
+            case "cargarFormularioEdicion":
+                cargarFormularioEdicion(req, resp);
+                break;
+            case "guardarCategoria":
+                guardarCategoria(req, resp);
+                break;
+            case "eliminarCategoria":
+                eliminarCategoria(req, resp);
+                break;
+            default:
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ruta no válida.");
+                break;
         }
     }
 
@@ -68,7 +62,7 @@ public class GestionarCategoriaController extends HttpServlet {
 
     private void cargarFormularioEdicion(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id")); // Reemplazado por int
+        int id = Integer.parseInt(request.getParameter("id"));
         Categoria categoria = categoriaDAO.findById(id);
         if (categoria == null) {
             request.setAttribute("error", "Categoría no encontrada.");
@@ -95,7 +89,7 @@ public class GestionarCategoriaController extends HttpServlet {
         if (idStr == null || idStr.isEmpty()) {
             categoria = new Categoria();
         } else {
-            int id = Integer.parseInt(idStr); // Reemplazado por int
+            int id = Integer.parseInt(idStr);
             categoria = categoriaDAO.findById(id);
             if (categoria == null) {
                 request.setAttribute("error", "Categoría no encontrada.");
@@ -104,8 +98,8 @@ public class GestionarCategoriaController extends HttpServlet {
             }
         }
         categoria.setNombreCategoria(nombreCategoria);
-
         categoria.setUsuario(usuario);
+
         if (categoria.getId() == null) {
             categoriaDAO.crear(categoria);
         } else {
@@ -117,7 +111,7 @@ public class GestionarCategoriaController extends HttpServlet {
 
     private void eliminarCategoria(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id")); // Reemplazado por int
+        int id = Integer.parseInt(request.getParameter("id"));
         categoriaDAO.eliminar(id);
         response.sendRedirect("GestionarCategoria");
     }

@@ -59,7 +59,7 @@
 
                 <!-- Formulario de Crear/Editar Categoría -->
                 <form id="form-categoria" class="font-primary" action="GestionarCategoria" method="post">
-                    <input type="hidden" name="action" value="${categoria != null ? 'editar' : 'crear'}">
+                    <input type="hidden" name="ruta" value="${categoria != null ? 'guardarCategoria' : 'guardarCategoria'}">
                     <input type="hidden" name="id" value="${categoria != null ? categoria.id : ''}">
                     <div class="ds-flex">
                         <div class="flex-1 form-group pd-y-16 pd-r-24">
@@ -93,7 +93,7 @@
                                     <div class="actions-container">
                                         <!-- Botón EDITAR -->
                                         <form action="GestionarCategoria" method="get" style="display: inline;">
-                                            <input type="hidden" name="action" value="editar">
+                                            <input type="hidden" name="ruta" value="cargarFormularioEdicion">
                                             <input type="hidden" name="id" value="${categoria.id}">
                                             <button type="submit" class="button text-white action-button bg-primary">
                                                 Editar
@@ -101,7 +101,7 @@
                                         </form>
                                         <!-- Botón ELIMINAR -->
                                         <form action="GestionarCategoria" method="post" style="display: inline;">
-                                            <input type="hidden" name="action" value="eliminar">
+                                            <input type="hidden" name="ruta" value="eliminarCategoria">
                                             <input type="hidden" name="id" value="${categoria.id}">
                                             <button type="submit" class="button bg-error text-white action-button">
                                                 Eliminar
