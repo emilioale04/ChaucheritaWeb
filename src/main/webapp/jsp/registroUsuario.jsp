@@ -14,7 +14,7 @@
 <div id="toast-container"></div> <!-- Contenedor de toasts -->
 <div class="register-form">
     <h1 class="font-primary text-primary pd-b-24">Registro</h1>
-    <form action="usuarioServlet" method="post">
+    <form action="<%= request.getContextPath() %>/registroController" method="post">
         <input type="hidden" name="route" value="registrar">
         <div class="form-row">
             <label for="nombre" class="text-dark text-base pd-r-16 font-primary">Nombre:</label>
