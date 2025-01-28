@@ -1,6 +1,9 @@
 package ec.edu.epn.chaucheritaweb.model.entities;
 
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
@@ -26,6 +29,7 @@ public class Categoria implements Serializable {
 
     @ManyToOne 
     @JoinColumn(name = "id_usuario", nullable = false) // Clave foránea en la tabla "categoria"
+    @JsonIgnoreProperties({"usuario", "clave"})
     private Usuario usuario;
 
     public Categoria() {}
@@ -59,5 +63,14 @@ public class Categoria implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    @Override
+    public String toString() {
+        return "Categoria{" +
+                "id=" + id +
+                ", nombreCategoria='" + nombreCategoria + '\'' +
+                ", usuario=" + usuario +
+                '}';
     }
 }
