@@ -16,11 +16,11 @@
 		<properties>
 			<!-- Configuración de conexión a PostgreSQL -->
 			<property name="jakarta.persistence.jdbc.url"
-				value="jdbc:postgresql://localhost:5432/dbchaucherita" />
+				value="jdbc:postgresql://localhost:5432/chaucherita_db" />
 			<property name="jakarta.persistence.jdbc.user"
 				value="postgres" />
 			<property name="jakarta.persistence.jdbc.password"
-				value="postgres" />
+				value="usuario123" />
 			<property name="jakarta.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
 
