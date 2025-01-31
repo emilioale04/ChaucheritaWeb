@@ -74,22 +74,32 @@ public class GestionarCuentasController extends HttpServlet {
 		resp.sendRedirect("jsp/gestionarCuenta.jsp");
 	}
 
-	private void guardarNueva(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String nombre = req.getParameter("nombre");
-		BigDecimal balance = new BigDecimal(req.getParameter("balance"));
+private void guardarNueva(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String nombre = req.getParameter("nombre");
+    BigDecimal balance = new BigDecimal(req.getParameter("balance"));
 
-		Cuenta cuenta = new Cuenta();
-		cuenta.setNombre(nombre);
-		cuenta.setBalance(balance);
+    Cuenta cuenta = new Cuenta();
+    cuenta.setNombre(nombre);
+    cuenta.setBalance(balance);
 
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		em.persist(cuenta);
-		em.getTransaction().commit();
-		em.close();
+    EntityManager em = emf.createEntityManager();
+    try {
+        em.getTransaction().begin();
+        em.persist(cuenta);
+        em.getTransaction().commit();
+        req.setAttribute("mensaje", "La cuenta fue guardada correctamente.");
+    } catch (Exception e) {
+        em.getTransaction().rollback();
+        req.setAttribute("mensaje", "Error: No se pudo guardar la cuenta. " + e.getMessage());
+    } finally {
+        em.close();
+    }
 
-		listarCuentas(req, resp);
-	}
+    listarCuentas(req, resp);
+}
+
+
+
 
 	private void eliminarCuenta(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String idCuentaStr = req.getParameter("cuentaId");
@@ -119,5 +129,5 @@ public class GestionarCuentasController extends HttpServlet {
 			req.setAttribute("mensaje", "Error: El ID de la cuenta debe ser un número.");
 			req.getRequestDispatcher("jsp/eliminarCuenta.jsp").forward(req, resp);
 		}
-	}
+		}
 }

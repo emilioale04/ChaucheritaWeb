@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/movimiento.css">
     <link rel="icon" type="image/png" href="images/dollar.png">
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styles.css">
     <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
 </head>
 
@@ -79,8 +80,8 @@
                 <div class="flex-1">
                     <h2 class="font-primary text-dark">Crear Nueva Cuenta</h2>
 
-                    <form id="crear-cuenta-form" class="font-primary" action="" method="post">
-                        <input type="hidden" name="ruta" value="">
+                    <form id="crear-cuenta-form" class="font-primary" action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
+                        <input type="hidden" name="ruta" value="guardarNueva">
                         <div class="ds-flex">
                             <div class="flex-1 form-group pd-y-16 pd-r-24">
                                 <label for="nombre">Nombre de la Cuenta:</label>
@@ -108,9 +109,7 @@
                             <tr class="bg-light text-dark">
                                 <th class="pd-8">ID</th>
                                 <th class="pd-8">Nombre
-                                    <button id="ordenar-cuentas" class="button bg-primary text-white pd-8 mg-t-8">
-                                        .
-                                    </button>
+
                                 </th>
                                 <th class="pd-8">Balance Actual</th>
                                 <th class="pd-8">Acciones</th>

@@ -40,7 +40,7 @@
                     </form>
                 </li>
                 <li>
-                    <form action="" method="get">
+                    <form action="<%= request.getContextPath() %>/jsp/gestionarCuenta.jsp" method="get">
                         <input type="hidden" name="ruta" value="">
                         <button class="menu-button pd-8" type="submit">
                             <i class="fa-solid fa-gear text-xl"></i> Cuentas
