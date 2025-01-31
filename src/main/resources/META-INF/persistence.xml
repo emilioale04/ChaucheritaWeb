@@ -16,17 +16,17 @@
 		<properties>
 			<!-- Configuración de conexión a PostgreSQL -->
 			<property name="jakarta.persistence.jdbc.url"
-				value="jdbc:postgresql://localhost:5432/chaucherita_db" />
+				value="jdbc:postgresql://localhost:5432/dbchaucherita" />
 			<property name="jakarta.persistence.jdbc.user"
 				value="postgres" />
 			<property name="jakarta.persistence.jdbc.password"
-				value="usuario123" />
+				value="postgres" />
 			<property name="jakarta.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
 
 			<!-- Configuración adicional -->
 			<property name="eclipselink.logging.level" value="FINE" />
- 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+ 			<property name="eclipselink.ddl-generation" value="none" />
 <!--			   <property name="eclipselink.ddl-generation" value="none"/>-->
 			  <!-- <property name="eclipselink.ddl-generation" value="create-tables"/>-->
 		</properties>
