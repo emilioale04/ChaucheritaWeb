@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/movimiento.css">
     <link rel="icon" type="image/png" href="images/dollar.png">
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styles.css">
     <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
 </head>
 
@@ -27,8 +28,8 @@
     <header class="header bg-primary ds-flex jc-sb pd-y-16 pd-x-24 font-secondary text-white align-center">
         <div></div>
         <div>
-            <form action="" method="post">
-                <input type="hidden" name="ruta" value="">
+            <form action="<%= request.getContextPath() %>/menuController" method="post">
+                <input type="hidden" name="ruta" value="logout">
                 <button type="submit" class="logout-button">
                     <span class="pd-r-8 font-bold font-primary text-base">Cerrar Sesión</span>
                     <i class="fa-solid fa-right-from-bracket text-white text-xl"></i>
@@ -42,8 +43,8 @@
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
+                    <form action="<%= request.getContextPath() %>/menuController" method="get">
+                        <input type="hidden" name="ruta" value="home">
                         <button class="menu-button pd-8" type="submit">
                             <i class="fa-solid fa-house text-xl"></i> Inicio
                         </button>
@@ -79,8 +80,8 @@
                 <div class="flex-1">
                     <h2 class="font-primary text-dark">Crear Nueva Cuenta</h2>
 
-                    <form id="crear-cuenta-form" class="font-primary" action="" method="post">
-                        <input type="hidden" name="ruta" value="">
+                    <form id="crear-cuenta-form" class="font-primary" action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
+                        <input type="hidden" name="ruta" value="guardarNueva">
                         <div class="ds-flex">
                             <div class="flex-1 form-group pd-y-16 pd-r-24">
                                 <label for="nombre">Nombre de la Cuenta:</label>
@@ -108,9 +109,7 @@
                             <tr class="bg-light text-dark">
                                 <th class="pd-8">ID</th>
                                 <th class="pd-8">Nombre
-                                    <button id="ordenar-cuentas" class="button bg-primary text-white pd-8 mg-t-8">
-                                        .
-                                    </button>
+
                                 </th>
                                 <th class="pd-8">Balance Actual</th>
                                 <th class="pd-8">Acciones</th>

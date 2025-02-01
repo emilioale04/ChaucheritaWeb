@@ -16,7 +16,8 @@
     <header class="header bg-primary ds-flex jc-sb pd-y-16 pd-x-24 font-secondary text-white align-center">
         <div></div>
         <div>
-            <form action="" method="post">
+            <form action="<%= request.getContextPath() %>/menuController" method="post">
+                <input type="hidden" name="ruta" value="logout">
                 <button type="submit" class="logout-button">
                     <span class="pd-r-8 font-bold font-primary text-base">Cerrar Sesión</span>
                     <i class="fa-solid fa-right-from-bracket text-white text-xl"></i>
@@ -30,9 +31,12 @@
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
-                    <button class="menu-button pd-8" onclick="window.location.href='jsp/home.jsp'">
-                        <i class="fa-solid fa-house text-xl"></i> Inicio
-                    </button>
+                    <form action="<%= request.getContextPath() %>/menuController" method="get">
+                        <input type="hidden" name="ruta" value="home">
+                        <button class="menu-button pd-8" type="submit">
+                            <i class="fa-solid fa-house text-xl"></i> Inicio
+                        </button>
+                    </form>
                 </li>
                 <li>
                     <button class="menu-button pd-8" onclick="window.location.href='Cuentas'">
@@ -59,7 +63,8 @@
 
                 <!-- Formulario de Crear/Editar Categoría -->
                 <form id="form-categoria" class="font-primary" action="GestionarCategoria" method="post">
-                    <input type="hidden" name="ruta" value="${categoria != null ? 'guardarCategoria' : 'guardarCategoria'}">
+                    <input type="hidden" name="ruta"
+                        value="${categoria != null ? 'guardarCategoria' : 'guardarCategoria'}">
                     <input type="hidden" name="id" value="${categoria != null ? categoria.id : ''}">
                     <div class="ds-flex">
                         <div class="flex-1 form-group pd-y-16 pd-r-24">

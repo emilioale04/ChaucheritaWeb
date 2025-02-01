@@ -63,7 +63,7 @@ public class LoginController extends HttpServlet {
         
         if(u != null) {
         	req.getSession().setAttribute("usuario", u);
-        	req.getRequestDispatcher("jsp/home.jsp").forward(req, resp);
+        	resp.sendRedirect("menuController?ruta=home");
         } else {
         	resp.sendRedirect("jsp/login.jsp");
         }
