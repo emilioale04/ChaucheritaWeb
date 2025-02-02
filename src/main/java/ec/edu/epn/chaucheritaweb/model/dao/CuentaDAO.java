@@ -1,108 +1,77 @@
 package ec.edu.epn.chaucheritaweb.model.dao;
 
-import ec.edu.epn.chaucheritaweb.model.entities.Cuenta;
-import ec.edu.epn.chaucheritaweb.model.entities.Movimiento;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import ec.edu.epn.chaucheritaweb.model.entities.*;
+import jakarta.persistence.TypedQuery;
 import java.util.List;
 
-public class CuentaDAO {
+public class CuentaDAO extends BaseDAO<Cuenta> {
 
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChaucheritaWeb");
+    public CuentaDAO() {
+        super(Cuenta.class);
+    }
 
-    public void crearCuenta(Cuenta cuenta) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.persist(cuenta);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new RuntimeException("Error al crear la cuenta: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+    public void create(Cuenta cuenta) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(cuenta);
+        entityManager.getTransaction().commit();
     }
 
 
-    public List<Cuenta> listarCuentas() {
-        EntityManager em = emf.createEntityManager();
-        try {
-            return em.createQuery("SELECT c FROM Cuenta c", Cuenta.class).getResultList();
-        } finally {
-            em.close();
-        }
+    public Cuenta read(Long id) {
+        return entityManager.find(Cuenta.class, id);
     }
 
-    public void eliminarCuenta(int id) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            Cuenta cuenta = em.find(Cuenta.class, id);
-            if (cuenta != null) {
-                em.remove(cuenta);
-                em.getTransaction().commit();
-            }
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new RuntimeException("Error al eliminar la cuenta: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+
+    public void update(Cuenta cuenta) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(cuenta);
+        entityManager.getTransaction().commit();
     }
 
-    public void actualizarCuenta(Cuenta cuenta) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.merge(cuenta);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new RuntimeException("Error al actualizar la cuenta: " + e.getMessage());
-        } finally {
-            em.close();
+
+    public void delete(Long id) {
+        entityManager.getTransaction().begin();
+        Cuenta cuenta = entityManager.find(Cuenta.class, id);
+        if (cuenta != null) {
+            entityManager.remove(cuenta);
         }
+        entityManager.getTransaction().commit();
     }
+
+
+    public List<Cuenta> findByUsuario(Usuario usuario) {
+        TypedQuery<Cuenta> query = entityManager.createQuery(
+                "SELECT c FROM Cuenta c WHERE c.usuario = :usuario", Cuenta.class);
+        query.setParameter("usuario", usuario);
+        return query.getResultList();
+    }
+
 
     public void realizarMovimiento(Cuenta cuenta, Movimiento movimiento) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            if (movimiento instanceof ec.edu.epn.chaucheritaweb.model.entities.Ingreso) {
-                cuenta.setBalance(cuenta.getBalance().add(movimiento.getValor()));
-            } else if (movimiento instanceof ec.edu.epn.chaucheritaweb.model.entities.Egreso) {
-                cuenta.setBalance(cuenta.getBalance().subtract(movimiento.getValor()));
-            }
-            em.merge(cuenta);
-            em.persist(movimiento);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new RuntimeException("Error al realizar el movimiento: " + e.getMessage());
-        } finally {
-            em.close();
+        entityManager.getTransaction().begin();
+
+        if (movimiento instanceof Ingreso) {
+            cuenta.setBalance(cuenta.getBalance().add(movimiento.getValor()));
+        } else if (movimiento instanceof Egreso) {
+            cuenta.setBalance(cuenta.getBalance().subtract(movimiento.getValor()));
         }
+
+        entityManager.merge(cuenta);
+        entityManager.persist(movimiento);
+        entityManager.getTransaction().commit();
     }
 
-    public void realizarMovimiento(Cuenta cuenta, Cuenta cuentaDestino, Movimiento movimiento) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            if (movimiento instanceof ec.edu.epn.chaucheritaweb.model.entities.Transferencia) {
-                cuenta.setBalance(cuenta.getBalance().subtract(movimiento.getValor()));
-                cuentaDestino.setBalance(cuentaDestino.getBalance().add(movimiento.getValor()));
-            }
-            em.merge(cuenta);
-            em.merge(cuentaDestino);
-            em.persist(movimiento);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new RuntimeException("Error al realizar la transferencia: " + e.getMessage());
-        } finally {
-            em.close();
-        }
+
+    public void realizarMovimiento(Cuenta cuentaOrigen, Cuenta cuentaDestino, Transferencia movimiento) {
+        entityManager.getTransaction().begin();
+
+        cuentaOrigen.setBalance(cuentaOrigen.getBalance().subtract(movimiento.getValor()));
+        cuentaDestino.setBalance(cuentaDestino.getBalance().add(movimiento.getValor()));
+
+        entityManager.merge(cuentaOrigen);
+        entityManager.merge(cuentaDestino);
+        entityManager.persist(movimiento);
+
+        entityManager.getTransaction().commit();
     }
 }

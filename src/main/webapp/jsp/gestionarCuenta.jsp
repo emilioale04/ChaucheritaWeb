@@ -82,6 +82,7 @@
 
                     <form id="crear-cuenta-form" class="font-primary" action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
                         <input type="hidden" name="ruta" value="guardarNueva">
+                        <input type="hidden" name="usuario_id" value="${usuario.id}">
                         <div class="ds-flex">
                             <div class="flex-1 form-group pd-y-16 pd-r-24">
                                 <label for="nombre">Nombre de la Cuenta:</label>

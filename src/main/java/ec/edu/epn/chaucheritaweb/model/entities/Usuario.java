@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import java.util.List;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Table(name = "usuarios") 
@@ -22,6 +24,9 @@ public class Usuario implements Serializable {
     private String usuario;
     private String clave;
 
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Cuenta> cuentas;
     public Usuario() {}
 
     public int getId() {

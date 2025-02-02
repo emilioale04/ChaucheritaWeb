@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ec.edu.epn.chaucheritaweb.model.entities.Cuenta;
+import jakarta.servlet.http.HttpSession;
+import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
+
+
 
 @WebServlet("/GestionarCuentasController")
 public class GestionarCuentasController extends HttpServlet {
@@ -31,6 +35,7 @@ public class GestionarCuentasController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
 		this.ruteador(req, resp);
 	}
 
@@ -74,29 +79,43 @@ public class GestionarCuentasController extends HttpServlet {
 		resp.sendRedirect("jsp/gestionarCuenta.jsp");
 	}
 
-private void guardarNueva(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    String nombre = req.getParameter("nombre");
-    BigDecimal balance = new BigDecimal(req.getParameter("balance"));
+	private void guardarNueva(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
 
-    Cuenta cuenta = new Cuenta();
-    cuenta.setNombre(nombre);
-    cuenta.setBalance(balance);
+		if (usuario != null) {
+			String nombre = req.getParameter("nombre");
+			BigDecimal balance = new BigDecimal(req.getParameter("balance"));
 
-    EntityManager em = emf.createEntityManager();
-    try {
-        em.getTransaction().begin();
-        em.persist(cuenta);
-        em.getTransaction().commit();
-        req.setAttribute("mensaje", "La cuenta fue guardada correctamente.");
-    } catch (Exception e) {
-        em.getTransaction().rollback();
-        req.setAttribute("mensaje", "Error: No se pudo guardar la cuenta. " + e.getMessage());
-    } finally {
-        em.close();
-    }
+			EntityManager em = emf.createEntityManager();
+			try {
+				em.getTransaction().begin();
 
-    listarCuentas(req, resp);
-}
+				// Asegurar que el usuario está gestionado por JPA
+				usuario = em.find(Usuario.class, usuario.getId());
+
+				// Crear la nueva cuenta
+				Cuenta cuenta = new Cuenta();
+				cuenta.setNombre(nombre);
+				cuenta.setBalance(balance);
+				cuenta.setUsuario(usuario);  // Asignar el usuario a la cuenta
+
+				em.persist(cuenta);
+				em.getTransaction().commit();
+				req.setAttribute("mensaje", "La cuenta fue guardada correctamente.");
+			} catch (Exception e) {
+				em.getTransaction().rollback();
+				req.setAttribute("mensaje", "Error: No se pudo guardar la cuenta. " + e.getMessage());
+			} finally {
+				em.close();
+			}
+
+			listarCuentas(req, resp);
+		} else {
+			req.setAttribute("mensaje", "Error: Usuario no autenticado.");
+			req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
+		}
+	}
 
 
 
