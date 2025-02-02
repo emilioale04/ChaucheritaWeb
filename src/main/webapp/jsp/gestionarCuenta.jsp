@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionar Cuenta</title>
-    <link rel="stylesheet" href="styles/styles.css">
-    <link rel="stylesheet" href="styles/movimiento.css">
-    <link rel="icon" type="image/png" href="images/dollar.png">
-    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jsp/styles/home.css">
+    <link rel="icon" type="image/png" href="<%= request.getContextPath() %>/jsp/images/dollar.png">
+    <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/d2aae01839.js" crossorigin="anonymous"></script>
 </head>
 
@@ -81,24 +81,28 @@
                     <h2 class="font-primary text-dark">Crear Nueva Cuenta</h2>
 
                     <form id="crear-cuenta-form" class="font-primary" action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
-                        <input type="hidden" name="ruta" value="guardarNueva">
+                        <input type="hidden" name="ruta" value="${cuentaSeleccionada != null ? 'actualizarCuenta' : 'guardarNueva'}">
                         <input type="hidden" name="usuario_id" value="${usuario.id}">
+                        <input type="hidden" name="cuentaId" value="${cuentaSeleccionada.id}"> <!-- Para saber si es edición -->
                         <div class="ds-flex">
                             <div class="flex-1 form-group pd-y-16 pd-r-24">
                                 <label for="nombre">Nombre de la Cuenta:</label>
                                 <input type="text" id="nombre" name="nombre" class="input text-base"
-                                    placeholder="Ingrese el nombre de la cuenta" required>
+                                       placeholder="Ingrese el nombre de la cuenta" value="${cuentaSeleccionada.nombre}" required>
                             </div>
                             <div class="flex-1 form-group pd-y-16 pd-l-24">
                                 <label for="balance">Balance Inicial:</label>
                                 <input type="number" id="balance" name="balance" class="input text-base"
-                                    placeholder="Ingrese el balance inicial" required>
+                                       placeholder="Ingrese el balance inicial" value="${cuentaSeleccionada.balance}" required>
                             </div>
                         </div>
                         <div>
-                            <button type="submit" class="button bg-primary text-white">Crear Cuenta</button>
+                            <button type="submit" class="button bg-primary text-white">
+                                ${cuentaSeleccionada != null ? 'Actualizar Cuenta' : 'Crear Cuenta'}
+                            </button>
                         </div>
                     </form>
+
                 </div>
             </div>
 
@@ -123,21 +127,22 @@
                                     <td class="pd-8">${cuenta.nombre}</td>
                                     <td class="pd-8">${cuenta.balance}</td>
                                     <td class="pd-8 ds-flex jc-sa">
-                                        <form action="" method="get">
-                                            <input type="hidden" name="ruta" value="">
+                                        <form action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
+                                            <input type="hidden" name="ruta" value="eliminarCuenta">
                                             <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                             <button type="submit" class="button bg-primary text-white"> <i
                                                     class="fa-solid fa-trash text-xl"></i>
                                             </button>
                                         </form>
 
-                                        <form action="" method="get">
-                                            <input type="hidden" name="ruta" value="">
+                                        <form action="<%= request.getContextPath() %>/GestionarCuentasController" method="get">
+                                            <input type="hidden" name="ruta" value="cargarFormularioEdicion">
                                             <input type="hidden" name="cuentaId" value="${cuenta.id}">
-                                            <button type="submit" class="button bg-primary text-white"> <i
-                                                    class="fa-solid fa-pencil text-xl"></i>
+                                            <button type="submit" class="button bg-primary text-white">
+                                                <i class="fa-solid fa-pencil text-xl"></i>
                                             </button>
                                         </form>
+
                                     </td>
                                 </tr>
                             </c:forEach>
