@@ -20,7 +20,7 @@
 			<property name="jakarta.persistence.jdbc.user"
 				value="postgres" />
 			<property name="jakarta.persistence.jdbc.password"
-				value="usuario123" />
+				value="postgres" />
 			<property name="jakarta.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
 
