@@ -43,35 +43,35 @@
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
-                    <form action="<%= request.getContextPath() %>/menuController" method="get">
-                        <input type="hidden" name="ruta" value="home">
-                        <button class="menu-button pd-8" type="submit">
-                            <i class="fa-solid fa-house text-xl"></i> Inicio
-                        </button>
-                    </form>
-                </li>
-                <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
-                        <button class="menu-button pd-8" type="submit">
-                            <i class="fa-solid fa-gear text-xl"></i> Cuentas
-                        </button>
-                    </form>
-                </li>
-                <li>
-                    <form action="" method="get">
-                        <input type="hidden" name="ruta" value="">
-                        <button class="menu-button pd-8" type="submit">
-                            <i class="fa-solid fa-tag text-xl"></i> Categorías
-                        </button>
-                    </form>
-                </li>
-                <li>
-                    <form action="<%= request.getContextPath() %>/verMovimientos" method="get">
-                        <button class="menu-button pd-8" type="submit">
-                            <i class="fa-solid fa-eye text-xl"></i> Movimientos
-                        </button>
-                    </form>
+                                    <form action="<%= request.getContextPath() %>/menuController" method="get">
+                                        <input type="hidden" name="ruta" value="home">
+                                        <button class="menu-button pd-8" type="submit">
+                                            <i class="fa-solid fa-house text-xl"></i> Inicio
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<%= request.getContextPath() %>/GestionarCuentasController" method="get">
+                                        <input type="hidden" name="ruta" value="">
+                                        <button class="menu-button pd-8" type="submit">
+                                            <i class="fa-solid fa-gear text-xl"></i> Cuentas
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<%= request.getContextPath() %>/GestionarCategoria" method="get">
+                                        <button class="menu-button pd-8" type="submit">
+                                            <i class="fa-solid fa-tag text-xl"></i> Categorías
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<%= request.getContextPath() %>/verMovimientos" method="get">
+                                        <button class="menu-button pd-8" type="submit">
+                                            <i class="fa-solid fa-eye text-xl"></i> Movimientos
+                                        </button>
+                                    </form>
+                                </li>
                 </li>
             </ul>
         </nav>

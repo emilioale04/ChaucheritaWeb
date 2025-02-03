@@ -3,6 +3,8 @@ package ec.edu.epn.chaucheritaweb.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+
+import ec.edu.epn.chaucheritaweb.model.dao.CuentaDAO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -40,7 +42,7 @@ public class GestionarCuentasController extends HttpServlet {
 	}
 
 	private void ruteador(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String ruta = req.getParameter("ruta") != null ? req.getParameter("ruta") : "inicio";
+		String ruta = (req.getParameter("ruta") == null) ? "listarCuentas" : req.getParameter("ruta");
 
 		switch (ruta) {
 			case "crearCuenta":
@@ -67,9 +69,14 @@ public class GestionarCuentasController extends HttpServlet {
 
 
 	private void listarCuentas(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		EntityManager em = emf.createEntityManager();
-		List<Cuenta> cuentas = em.createQuery("SELECT c FROM Cuenta c", Cuenta.class).getResultList();
-		em.close();
+		Usuario usuario = (Usuario) req.getSession().getAttribute("usuario");
+
+		if (usuario == null) {
+			resp.sendRedirect("/jsp/login.jsp");
+			return;
+		}
+		CuentaDAO cuentaDAO = new CuentaDAO();
+		List<Cuenta> cuentas = cuentaDAO.findByUsuario(usuario);
 
 		req.setAttribute("cuentas", cuentas);
 		req.getRequestDispatcher("jsp/gestionarCuenta.jsp").forward(req, resp);
