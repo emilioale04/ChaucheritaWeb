@@ -39,39 +39,39 @@
     </header>
     <main class="ds-flex">
         <nav class="sidemenu bg-light">
-            <img src="images/wallet-512px.png" alt="wallet">
+            <img src="<%= request.getContextPath() %>/jsp/images/wallet-512px.png" alt="wallet">
             <span class="text-dark font-primary text-center pd-b-16">Chaucherita<br>Web</span>
             <ul class="menu ls-none">
                 <li>
-                                    <form action="<%= request.getContextPath() %>/menuController" method="get">
-                                        <input type="hidden" name="ruta" value="home">
-                                        <button class="menu-button pd-8" type="submit">
-                                            <i class="fa-solid fa-house text-xl"></i> Inicio
-                                        </button>
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="<%= request.getContextPath() %>/GestionarCuentasController" method="get">
-                                        <input type="hidden" name="ruta" value="">
-                                        <button class="menu-button pd-8" type="submit">
-                                            <i class="fa-solid fa-gear text-xl"></i> Cuentas
-                                        </button>
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="<%= request.getContextPath() %>/GestionarCategoria" method="get">
-                                        <button class="menu-button pd-8" type="submit">
-                                            <i class="fa-solid fa-tag text-xl"></i> Categorías
-                                        </button>
-                                    </form>
-                                </li>
-                                <li>
-                                    <form action="<%= request.getContextPath() %>/verMovimientos" method="get">
-                                        <button class="menu-button pd-8" type="submit">
-                                            <i class="fa-solid fa-eye text-xl"></i> Movimientos
-                                        </button>
-                                    </form>
-                                </li>
+                    <form action="<%= request.getContextPath() %>/menuController" method="get">
+                        <input type="hidden" name="ruta" value="home">
+                        <button class="menu-button pd-8" type="submit">
+                            <i class="fa-solid fa-house text-xl"></i> Inicio
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <form action="<%= request.getContextPath() %>/GestionarCuentasController" method="get">
+                        <input type="hidden" name="ruta" value="">
+                        <button class="menu-button pd-8" type="submit">
+                            <i class="fa-solid fa-gear text-xl"></i> Cuentas
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <form action="<%= request.getContextPath() %>/GestionarCategoria" method="get">
+                        <button class="menu-button pd-8" type="submit">
+                            <i class="fa-solid fa-tag text-xl"></i> Categorías
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <form action="<%= request.getContextPath() %>/verMovimientos" method="get">
+                        <button class="menu-button pd-8" type="submit">
+                            <i class="fa-solid fa-eye text-xl"></i> Movimientos
+                        </button>
+                    </form>
+                </li>
             </ul>
         </nav>
         <section class="ds-flex-column flex-1">
@@ -79,20 +79,25 @@
                 <div class="flex-1">
                     <h2 class="font-primary text-dark">Crear Nueva Cuenta</h2>
 
-                    <form id="crear-cuenta-form" class="font-primary" action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
-                        <input type="hidden" name="ruta" value="${cuentaSeleccionada != null ? 'actualizarCuenta' : 'guardarNueva'}">
+                    <form id="crear-cuenta-form" class="font-primary"
+                        action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
+                        <input type="hidden" name="ruta"
+                            value="${cuentaSeleccionada != null ? 'actualizarCuenta' : 'guardarNueva'}">
                         <input type="hidden" name="usuario_id" value="${usuario.id}">
-                        <input type="hidden" name="cuentaId" value="${cuentaSeleccionada.id}"> <!-- Para saber si es edición -->
+                        <input type="hidden" name="cuentaId" value="${cuentaSeleccionada.id}">
+                        <!-- Para saber si es edición -->
                         <div class="ds-flex">
                             <div class="flex-1 form-group pd-y-16 pd-r-24">
                                 <label for="nombre">Nombre de la Cuenta:</label>
                                 <input type="text" id="nombre" name="nombre" class="input text-base"
-                                       placeholder="Ingrese el nombre de la cuenta" value="${cuentaSeleccionada.nombre}" required>
+                                    placeholder="Ingrese el nombre de la cuenta" value="${cuentaSeleccionada.nombre}"
+                                    required>
                             </div>
                             <div class="flex-1 form-group pd-y-16 pd-l-24">
                                 <label for="balance">Balance Inicial:</label>
                                 <input type="number" id="balance" name="balance" class="input text-base"
-                                       placeholder="Ingrese el balance inicial" value="${cuentaSeleccionada.balance}" required>
+                                    placeholder="Ingrese el balance inicial" value="${cuentaSeleccionada.balance}"
+                                    required>
                             </div>
                         </div>
                         <div>
@@ -126,7 +131,8 @@
                                     <td class="pd-8">${cuenta.nombre}</td>
                                     <td class="pd-8">${cuenta.balance}</td>
                                     <td class="pd-8 ds-flex jc-sa">
-                                        <form action="<%= request.getContextPath() %>/GestionarCuentasController" method="post">
+                                        <form action="<%= request.getContextPath() %>/GestionarCuentasController"
+                                            method="post">
                                             <input type="hidden" name="ruta" value="eliminarCuenta">
                                             <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                             <button type="submit" class="button bg-primary text-white"> <i
@@ -134,7 +140,8 @@
                                             </button>
                                         </form>
 
-                                        <form action="<%= request.getContextPath() %>/GestionarCuentasController" method="get">
+                                        <form action="<%= request.getContextPath() %>/GestionarCuentasController"
+                                            method="get">
                                             <input type="hidden" name="ruta" value="cargarFormularioEdicion">
                                             <input type="hidden" name="cuentaId" value="${cuenta.id}">
                                             <button type="submit" class="button bg-primary text-white">

@@ -65,7 +65,7 @@ public class LoginController extends HttpServlet {
         	req.getSession().setAttribute("usuario", u);
         	resp.sendRedirect("menuController?ruta=home");
         } else {
-        	resp.sendRedirect("jsp/login.jsp");
+        	resp.sendRedirect(req.getContextPath() + "/jsp/login.jsp");
         }
     }
 }
