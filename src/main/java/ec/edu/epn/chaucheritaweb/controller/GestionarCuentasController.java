@@ -14,6 +14,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import ec.edu.epn.chaucheritaweb.model.entities.Cuenta;
 import jakarta.servlet.http.HttpSession;
 import ec.edu.epn.chaucheritaweb.model.entities.Usuario;
+import ec.edu.epn.chaucheritaweb.model.dao.CuentaDAO;
+
+
+
 
 
 
@@ -43,9 +47,6 @@ public class GestionarCuentasController extends HttpServlet {
 		String ruta = req.getParameter("ruta") != null ? req.getParameter("ruta") : "inicio";
 
 		switch (ruta) {
-			case "crearCuenta":
-				this.crearCuenta(req, resp);
-				break;
 			case "guardarNueva":
 				this.guardarNueva(req, resp);
 				break;
@@ -67,17 +68,27 @@ public class GestionarCuentasController extends HttpServlet {
 
 
 	private void listarCuentas(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		EntityManager em = emf.createEntityManager();
-		List<Cuenta> cuentas = em.createQuery("SELECT c FROM Cuenta c", Cuenta.class).getResultList();
-		em.close();
+		Usuario usuario = (Usuario) req.getSession().getAttribute("usuario");
 
-		req.setAttribute("cuentas", cuentas);
-		req.getRequestDispatcher("jsp/gestionarCuenta.jsp").forward(req, resp);
+		if (usuario == null) {
+			req.setAttribute("mensaje", "Debe iniciar sesión para ver sus cuentas.");
+			req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
+			return;
+		}
+
+		CuentaDAO cuentaDAO = new CuentaDAO();
+
+		try {
+			List<Cuenta> cuentas = cuentaDAO.listarCuentas(usuario);
+
+			req.setAttribute("cuentas", cuentas);
+			req.getRequestDispatcher("/jsp/listarCuentas.jsp").forward(req, resp);
+		} catch (Exception e) {
+			req.setAttribute("mensaje", "Error al listar cuentas: " + e.getMessage());
+			req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
+		}
 	}
 
-	private void crearCuenta(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.sendRedirect("jsp/gestionarCuenta.jsp");
-	}
 
 	private void guardarNueva(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
@@ -86,28 +97,12 @@ public class GestionarCuentasController extends HttpServlet {
 		if (usuario != null) {
 			String nombre = req.getParameter("nombre");
 			BigDecimal balance = new BigDecimal(req.getParameter("balance"));
-
-			EntityManager em = emf.createEntityManager();
+			CuentaDAO cuentaDAO = new CuentaDAO();
 			try {
-				em.getTransaction().begin();
-
-				// Asegurar que el usuario está gestionado por JPA
-				usuario = em.find(Usuario.class, usuario.getId());
-
-				// Crear la nueva cuenta
-				Cuenta cuenta = new Cuenta();
-				cuenta.setNombre(nombre);
-				cuenta.setBalance(balance);
-				cuenta.setUsuario(usuario);  // Asignar el usuario a la cuenta
-
-				em.persist(cuenta);
-				em.getTransaction().commit();
+				cuentaDAO.create(usuario, nombre, balance);
 				req.setAttribute("mensaje", "La cuenta fue guardada correctamente.");
 			} catch (Exception e) {
-				em.getTransaction().rollback();
 				req.setAttribute("mensaje", "Error: No se pudo guardar la cuenta. " + e.getMessage());
-			} finally {
-				em.close();
 			}
 
 			listarCuentas(req, resp);
@@ -123,7 +118,7 @@ public class GestionarCuentasController extends HttpServlet {
 	private void eliminarCuenta(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String idCuentaStr = req.getParameter("cuentaId");
 
-		if (idCuentaStr == null) {
+		if (idCuentaStr == null || idCuentaStr.isEmpty()) {
 			req.setAttribute("mensaje", "Error: ID de cuenta no especificado.");
 			req.getRequestDispatcher("jsp/gestionarCuenta.jsp").forward(req, resp);
 			return;
@@ -132,22 +127,23 @@ public class GestionarCuentasController extends HttpServlet {
 		try {
 			int idCuenta = Integer.parseInt(idCuentaStr);
 
-			EntityManager em = emf.createEntityManager();
-			em.getTransaction().begin();
-			Cuenta cuenta = em.find(Cuenta.class, idCuenta);
-			if (cuenta != null) {
-				em.remove(cuenta);
-				em.getTransaction().commit();
+			CuentaDAO cuentaDAO = new CuentaDAO();
+
+			boolean cuentaEliminada = cuentaDAO.delete(idCuenta);
+
+			if (cuentaEliminada) {
 				req.setAttribute("mensaje", "La cuenta fue eliminada correctamente.");
 			} else {
-				req.setAttribute("mensaje", "Error: No se pudo eliminar la cuenta. Verifique el ID.");
+				req.setAttribute("mensaje", "Error: No se encontró una cuenta con ese ID.");
 			}
-			em.close();
 
-			// Redirigir para listar las cuentas actualizadas después de eliminar
 			listarCuentas(req, resp);
+
 		} catch (NumberFormatException e) {
-			req.setAttribute("mensaje", "Error: El ID de la cuenta debe ser un número.");
+			req.setAttribute("mensaje", "Error: El ID de la cuenta debe ser un número válido.");
+			req.getRequestDispatcher("jsp/gestionarCuenta.jsp").forward(req, resp);
+		} catch (Exception e) {
+			req.setAttribute("mensaje", "Error: " + e.getMessage());
 			req.getRequestDispatcher("jsp/gestionarCuenta.jsp").forward(req, resp);
 		}
 	}
@@ -162,26 +158,19 @@ public class GestionarCuentasController extends HttpServlet {
 		String balanceStr = req.getParameter("balance");
 
 		if (cuentaIdStr != null && !cuentaIdStr.isEmpty() && nombre != null && balanceStr != null) {
-			EntityManager em = emf.createEntityManager();
 			try {
-				em.getTransaction().begin();
-				int cuentaId = Integer.parseInt(cuentaIdStr);
-				BigDecimal balance = new BigDecimal(balanceStr);
 
-				Cuenta cuenta = em.find(Cuenta.class, cuentaId);
-				if (cuenta != null) {
-					cuenta.setNombre(nombre);
-					cuenta.setBalance(balance);
-					em.merge(cuenta);
-				}
-				em.getTransaction().commit();
-			} finally {
-				em.close();
+				Long cuentaId = Long.parseLong(cuentaIdStr);
+				BigDecimal balance = new BigDecimal(balanceStr);
+				CuentaDAO cuentaDAO = new CuentaDAO();
+				cuentaDAO.update(cuentaId, nombre, balance);
+
+				resp.sendRedirect(req.getContextPath() + "/GestionarCuentasController?ruta=listarCuentas");
+			} catch (Exception e) {
+				req.setAttribute("mensaje", "Error: " + e.getMessage());
+				req.getRequestDispatcher("jsp/gestionarCuenta.jsp").forward(req, resp);
 			}
 		}
-
-		// Redirigir a la vista de listado de cuentas
-		resp.sendRedirect(req.getContextPath() + "/GestionarCuentasController?ruta=listarCuentas");
 	}
 
 
