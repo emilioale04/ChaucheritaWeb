@@ -42,17 +42,20 @@ public class CuentaDAO extends BaseDAO<Cuenta> {
 
     public void update(Long cuentaId, String nombre, BigDecimal balance) {
         entityManager.getTransaction().begin();
-
-        Cuenta cuenta = entityManager.find(Cuenta.class, cuentaId);
-
-        if (cuenta != null) {
-            cuenta.setNombre(nombre);
-            cuenta.setBalance(balance);
-
-            entityManager.merge(cuenta);
+        try {
+            Cuenta cuenta = entityManager.find(Cuenta.class, cuentaId);
+            if (cuenta != null) {
+                cuenta.setNombre(nombre);
+                cuenta.setBalance(balance);
+                entityManager.merge(cuenta);
+            }
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw e;
         }
-
-        entityManager.getTransaction().commit();
     }
 
 
@@ -77,13 +80,6 @@ public class CuentaDAO extends BaseDAO<Cuenta> {
         }
     }
 
-
-    public List<Cuenta> findByUsuario(Usuario usuario) {
-        TypedQuery<Cuenta> query = entityManager.createQuery(
-                "SELECT c FROM Cuenta c WHERE c.usuario = :usuario", Cuenta.class);
-        query.setParameter("usuario", usuario);
-        return query.getResultList();
-    }
 
 
     public void realizarMovimiento(Cuenta cuenta, Movimiento movimiento) {

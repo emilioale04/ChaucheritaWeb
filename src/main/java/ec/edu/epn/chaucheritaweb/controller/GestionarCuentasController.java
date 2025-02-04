@@ -159,12 +159,12 @@ public class GestionarCuentasController extends HttpServlet {
 
 		if (cuentaIdStr != null && !cuentaIdStr.isEmpty() && nombre != null && balanceStr != null) {
 			try {
-
 				Long cuentaId = Long.parseLong(cuentaIdStr);
 				BigDecimal balance = new BigDecimal(balanceStr);
 				CuentaDAO cuentaDAO = new CuentaDAO();
 				cuentaDAO.update(cuentaId, nombre, balance);
 
+				// Redirigir al listado de cuentas
 				resp.sendRedirect(req.getContextPath() + "/GestionarCuentasController?ruta=listarCuentas");
 			} catch (Exception e) {
 				req.setAttribute("mensaje", "Error: " + e.getMessage());
@@ -180,17 +180,19 @@ public class GestionarCuentasController extends HttpServlet {
 	private void cargarFormularioEdicion(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String cuentaIdStr = req.getParameter("cuentaId");
 		if (cuentaIdStr != null && !cuentaIdStr.isEmpty()) {
-			EntityManager em = emf.createEntityManager();
 			try {
-				int cuentaId = Integer.parseInt(cuentaIdStr);
-				Cuenta cuenta = em.find(Cuenta.class, cuentaId);
+				Long cuentaId = Long.parseLong(cuentaIdStr);
+				CuentaDAO cuentaDAO = new CuentaDAO();
+				Cuenta cuenta = cuentaDAO.read(cuentaId);
 				req.setAttribute("cuentaSeleccionada", cuenta);
-			} finally {
-				em.close();
+				req.getRequestDispatcher("/jsp/gestionarCuenta.jsp").forward(req, resp);
+			} catch (Exception e) {
+				req.setAttribute("mensaje", "Error al cargar la cuenta: " + e.getMessage());
+				req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
 			}
 		}
-		req.getRequestDispatcher("/jsp/gestionarCuenta.jsp").forward(req, resp);
 	}
+
 
 
 
