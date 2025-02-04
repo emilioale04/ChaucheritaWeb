@@ -66,7 +66,7 @@ public class RealizarMovimientoController extends HttpServlet {
         req.getRequestDispatcher("jsp/realizarMovimiento.jsp").forward(req, resp);
     }
 
-    private void procesarMovimiento(HttpServletRequest req, HttpServletResponse resp, boolean esIngreso) throws IOException, ServletException {
+    private void realizarIngreso(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         try {
             int cuentaId = Integer.parseInt(req.getParameter("cuentaId"));
             BigDecimal valor = new BigDecimal(req.getParameter("valor"));
@@ -98,20 +98,14 @@ public class RealizarMovimientoController extends HttpServlet {
                 return;
             }
 
-            Movimiento movimiento;
-            if (esIngreso) {
-                movimiento = new Ingreso();
-            } else {
-                movimiento = new Egreso();
-            }
+            Movimiento ingreso = new Ingreso();
+            ingreso.setValor(valor);
+            ingreso.setConcepto(concepto.trim());
+            ingreso.setCategoria(categoria);
+            ingreso.setCuenta(cuenta);
+            ingreso.setFecha(LocalDateTime.now());
 
-            movimiento.setValor(valor);
-            movimiento.setConcepto(concepto.trim());
-            movimiento.setCategoria(categoria);
-            movimiento.setCuenta(cuenta);
-            movimiento.setFecha(LocalDateTime.now());
-
-            cuentaDAO.realizarMovimiento(cuenta, movimiento);
+            cuentaDAO.realizarMovimiento(cuenta, ingreso);
 
             req.setAttribute("cuentaId", cuenta.getId());
             req.getRequestDispatcher("realizarMovimientoController?ruta=realizarMovimiento").forward(req, resp);
@@ -122,12 +116,54 @@ public class RealizarMovimientoController extends HttpServlet {
         }
     }
 
-    private void realizarIngreso(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        procesarMovimiento(req, resp, true);
-    }
-
     private void realizarEgreso(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        procesarMovimiento(req, resp, false);
+        try {
+            int cuentaId = Integer.parseInt(req.getParameter("cuentaId"));
+            BigDecimal valor = new BigDecimal(req.getParameter("valor"));
+            String concepto = req.getParameter("concepto");
+            int categoriaId = Integer.parseInt(req.getParameter("categoriaId"));
+
+            if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "El valor debe ser mayor a cero.");
+                return;
+            }
+
+            if (concepto == null || concepto.trim().isEmpty()) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "El concepto no puede estar vacío.");
+                return;
+            }
+
+            CuentaDAO cuentaDAO = new CuentaDAO();
+            CategoriaDAO categoriaDAO = new CategoriaDAO();
+
+            Cuenta cuenta = cuentaDAO.findById(cuentaId);
+            if (cuenta == null) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "La cuenta especificada no existe.");
+                return;
+            }
+
+            Categoria categoria = categoriaDAO.findById(categoriaId);
+            if (categoria == null) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "La categoría especificada no existe.");
+                return;
+            }
+
+            Movimiento egreso = new Egreso();
+            egreso.setValor(valor);
+            egreso.setConcepto(concepto.trim());
+            egreso.setCategoria(categoria);
+            egreso.setCuenta(cuenta);
+            egreso.setFecha(LocalDateTime.now());
+
+            cuentaDAO.realizarMovimiento(cuenta, egreso);
+
+            req.setAttribute("cuentaId", cuenta.getId());
+            req.getRequestDispatcher("realizarMovimientoController?ruta=realizarMovimiento").forward(req, resp);
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parámetros numéricos inválidos.");
+        } catch (NullPointerException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Faltan parámetros obligatorios.");
+        }
     }
 
     private void realizarTransferencia(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
